@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ELITELEGEND9841</title>
+    <link rel="icon" href="icon.png" type="image/png">
+    
+    <style>
+        :root {
+            --primary-color: #ffffff;
+            --border-light: rgba(255, 255, 255, 0.3);
+            --bg-overlay: rgba(10, 10, 10, 0.85);
+            --transition-smooth: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none; 
+        }
+
+        body {
+            height: 100dvh; 
+            width: 100vw;
+            background: url('bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            background-color: var(--bg-overlay);
+            background-blend-mode: overlay;
+            display: flex;
+            justify-content: center; 
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            padding: 2vh 20px; 
+        }
+
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #080808; 
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.6s ease;
+        }
+
+        .loader-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid transparent;
+            border-top: 3px solid rgba(255, 255, 255, 0.9);
+            border-right: 3px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            animation: spinRight 1s linear infinite;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+        }
+
+        .preloader-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            position: relative;
+        }
+
+        @keyframes fadeInOnly {
+            0% { opacity: 0; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes smoothFloating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes slideUpFade {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes buttonPulse {
+            0% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); border-color: var(--border-light); }
+            50% { box-shadow: 0 0 25px rgba(255, 255, 255, 0.5); border-color: rgba(255, 255, 255, 0.9); }
+            100% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); border-color: var(--border-light); }
+        }
+
+        @keyframes spinRight { 
+            0% { transform: translate(-50%, -50%) rotate(0deg); } 
+            100% { transform: translate(-50%, -50%) rotate(360deg); } 
+        }
+        @keyframes spinLeft { 
+            0% { transform: translate(-50%, -50%) rotate(360deg); } 
+            100% { transform: translate(-50%, -50%) rotate(-360deg); } 
+        }
+
+        .logo-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            animation: fadeInOnly 1s ease-out forwards 0.3s, smoothFloating 6s ease-in-out infinite 0.8s;
+            margin-bottom: 12vh;
+        }
+
+        .ring-1, .ring-2 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .ring-1 {
+            width: clamp(210px, 40vh, 400px);
+            height: clamp(210px, 40vh, 400px);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-top: 3px solid rgba(255, 255, 255, 0.8);
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+            animation: spinRight 4s linear infinite;
+        }
+
+        .ring-2 {
+            width: clamp(230px, 44vh, 430px);
+            height: clamp(230px, 44vh, 430px);
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            border-left: 2px solid rgba(255, 255, 255, 0.5);
+            filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.3));
+            animation: spinLeft 7s linear infinite;
+        }
+
+        .main-logo {
+            height: clamp(180px, 36vh, 360px); 
+            width: auto;
+            max-width: 75vw; 
+            object-fit: contain;
+            filter: drop-shadow(0 15px 25px rgba(255, 255, 255, 0.2));
+            transition: var(--transition-smooth);
+            z-index: 2;
+        }
+
+        .main-logo:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 45px rgba(255, 255, 255, 0.8)) brightness(1.1);
+        }
+
+        .glow-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            width: clamp(200px, 25vw, 260px);
+            height: clamp(50px, 7vh, 65px);
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            color: var(--primary-color);
+            font-size: clamp(16px, 2vw, 20px);
+            font-weight: 900;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+            margin-bottom: 6vh; 
+            
+            opacity: 0;
+            animation: slideUpFade 1s ease-out 0.8s forwards, buttonPulse 3s infinite 1.8s;
+            transition: var(--transition-smooth);
+        }
+
+        .glow-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--primary-color);
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 30px rgba(255, 255, 255, 0.5), inset 0 0 15px rgba(255, 255, 255, 0.2);
+            letter-spacing: 6px;
+        }
+
+        .glow-button:active {
+            transform: translateY(2px) scale(0.98);
+        }
+
+        .partner-section {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5vh;
+            opacity: 0;
+            animation: slideUpFade 1s ease-out 1s forwards;
+            z-index: 2;
+        }
+
+        .partner-title {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: clamp(10px, 1.2vw, 14px);
+            font-weight: 600;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .partner-title::before,
+        .partner-title::after {
+            content: '';
+            display: block;
+            width: clamp(20px, 5vw, 40px);
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .partner-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .partner-btn {
+            flex: 0 1 calc(25% - 15px); 
+            min-width: 120px;
+            max-width: 180px;
+            height: clamp(35px, 5vh, 50px);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #888;
+            font-size: clamp(10px, 1.1vw, 12px);
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-decoration: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: var(--transition-smooth);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+        }
+
+        .partner-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.7);
+            color: var(--primary-color);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 6px 15px rgba(255, 255, 255, 0.2);
+            letter-spacing: 2px;
+        }
+
+        /* --- ระบบเครื่องเล่นเพลงโทนดำ-ขาว มินิมอล พรีเมียม --- */
+        .audio-dock {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 9998;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideUpFade 1s ease-out 1.2s forwards;
+            opacity: 0;
+        }
+
+        .audio-border-glow {
+            position: relative;
+            border-radius: 30px;
+            padding: 1px;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .audio-panel {
+            background: rgba(12, 12, 12, 0.95);
+            border-radius: 28px;
+            padding: 8px 16px 8px 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .audio-panel.hidden-panel {
+            width: 48px;
+            padding: 8px;
+            overflow: hidden;
+        }
+
+        .cover-ring {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            flex-shrink: 0;
+            animation: spinCover 10s linear infinite;
+            animation-play-state: paused;
+        }
+
+        .audio-panel.is-playing .cover-ring {
+            animation-play-state: running;
+            border-color: #fff;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+        }
+
+        @keyframes spinCover {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .cover-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .audio-details {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            white-space: nowrap;
+        }
+
+        .song-link {
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            text-decoration: none;
+            letter-spacing: 0.8px;
+            max-width: 110px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: color 0.2s;
+        }
+
+        .song-link:hover {
+            color: #aaa;
+            text-decoration: underline;
+        }
+
+        .audio-btns {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .a-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 2px 7px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+        }
+
+        .a-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: #fff;
+            transform: translateY(-1px);
+        }
+
+        .vol-label {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.7);
+            min-width: 24px;
+            text-align: center;
+            font-family: monospace;
+            font-weight: bold;
+        }
+
+        .dock-btn {
+            background: rgba(12, 12, 12, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+            font-size: 9px;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+        }
+
+        .dock-btn:hover {
+            transform: scale(1.08);
+            border-color: #fff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 600px) {
+            .main-logo { height: auto; width: 65vw; }
+            .partner-btn { flex: 0 1 calc(50% - 10px); max-width: 150px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="preloader">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <div class="main-content">
+        <div class="logo-wrapper">
+            <div class="ring-1"></div>
+            <div class="ring-2"></div>
+            <img src="logo.png" alt="Winterfell Vega Logo" class="main-logo">
+        </div>
+        
+        <a href="member.html" class="glow-button" id="memberLink">MEMBER</a>
+
+        <div class="partner-section">
+            <div class="partner-title">PARTNER</div>
+            <div class="partner-grid">
+                <a href="https://threetwoonexyz.vercel.app" class="partner-btn" target="_blank">Threetwoone.xyz</a>
+                <a href="https://viseriom68.vercel.app" class="partner-btn" target="_blank">Ryosig 680</a>
+                <a href="https://ellsestyle.vercel.app/" class="partner-btn" target="_blank">Ellsestyle</a>
+                <a href="" class="partner-btn" target="_blank">Leroy born to die</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ระบบเสียงเว็บ -->
+    <audio id="bgMusic" src="music.mp3" loop></audio>
+
+    <div class="audio-dock">
+        <div class="audio-border-glow">
+            <div class="audio-panel" id="audioPanel">
+                <div class="cover-ring">
+                    <img src="cover.PNG" alt="Cover" class="cover-img">
+                </div>
+                <div class="audio-details">
+                    <a href="https://youtu.be/3R8-c4qRHGI?si=oP4NlnKDCiu_sIw9" target="_blank" class="song-link" title="ฟังเพลงต้นฉบับ">P9d - เฟี้ยวป่ะล่ะ</a>
+                    <div class="audio-btns">
+                        <button class="a-btn" id="playPauseBtn">PLAY</button>
+                        <button class="a-btn" id="volDown">-</button>
+                        <span class="vol-label" id="volText">30</span>
+                        <button class="a-btn" id="volUp">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="dock-btn" id="dockToggleBtn" title="ซ่อน/แสดง">AUDIO</button>
+    </div>
+
+    <script>
+        const audio = document.getElementById('bgMusic');
+        const audioPanel = document.getElementById('audioPanel');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const volDown = document.getElementById('volDown');
+        const volUp = document.getElementById('volUp');
+        const volText = document.getElementById('volText');
+        const dockToggleBtn = document.getElementById('dockToggleBtn');
+        const memberLink = document.getElementById('memberLink');
+
+        // ตรวจสอบค่าความดัง ถ้ายังไม่เคยตั้งค่า ให้เริ่มจาก 0 แล้วค่อยไต่ไป 30 (สูงสุด 100)
+        let currentVol = parseInt(localStorage.getItem('music_vol'));
+        if (isNaN(currentVol)) {
+            currentVol = 0;
+            audio.volume = 0;
+            // ไต่ระดับจาก 0 ถึง 30 อัตโนมัติในครั้งแรกที่เข้าเว็บ
+            let fadeIn = setInterval(() => {
+                if (currentVol < 30) {
+                    currentVol++;
+                    audio.volume = currentVol / 100;
+                    volText.textContent = currentVol;
+                    localStorage.setItem('music_vol', currentVol);
+                } else {
+                    clearInterval(fadeIn);
+                }
+            }, 100);
+        } else {
+            audio.volume = currentVol / 100;
+        }
+        volText.textContent = currentVol;
+
+        // ระบบคลิกที่ไหนก็ได้ในหน้าเว็บเพื่อเปิดเสียงและเล่นเพลง
+        let hasInteracted = false;
+        function handleFirstInteraction() {
+            if (!hasInteracted) {
+                hasInteracted = true;
+                const isPlayingState = localStorage.getItem('music_playing') !== 'false';
+                if (isPlayingState && audio.paused) {
+                    audio.play().then(() => {
+                        playPauseBtn.textContent = 'PAUSE';
+                        audioPanel.classList.add('is-playing');
+                        localStorage.setItem('music_playing', 'true');
+                    }).catch(e => console.log(e));
+                }
+            }
+        }
+        window.addEventListener('click', handleFirstInteraction, { once: true });
+        window.addEventListener('keydown', handleFirstInteraction, { once: true });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTime = localStorage.getItem('music_time');
+            const isPlaying = localStorage.getItem('music_playing') !== 'false';
+
+            if (savedTime) {
+                audio.currentTime = parseFloat(savedTime);
+            }
+
+            if (isPlaying) {
+                audio.play().then(() => {
+                    playPauseBtn.textContent = 'PAUSE';
+                    audioPanel.classList.add('is-playing');
+                }).catch(() => {
+                    playPauseBtn.textContent = 'PLAY';
+                    audioPanel.classList.remove('is-playing');
+                });
+            } else {
+                audio.pause();
+                playPauseBtn.textContent = 'PLAY';
+                audioPanel.classList.remove('is-playing');
+            }
+        });
+
+        memberLink.addEventListener('click', () => {
+            localStorage.setItem('music_time', audio.currentTime);
+            localStorage.setItem('music_playing', !audio.paused);
+            localStorage.setItem('music_vol', currentVol);
+        });
+
+        setInterval(() => {
+            if (!audio.paused) {
+                localStorage.setItem('music_time', audio.currentTime);
+            }
+        }, 500);
+
+        playPauseBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (audio.paused) {
+                audio.play();
+                playPauseBtn.textContent = 'PAUSE';
+                audioPanel.classList.add('is-playing');
+                localStorage.setItem('music_playing', 'true');
+            } else {
+                audio.pause();
+                playPauseBtn.textContent = 'PLAY';
+                audioPanel.classList.remove('is-playing');
+                localStorage.setItem('music_playing', 'false');
+            }
+        });
+
+        // เพิ่มเสียงสูงสุดถึง 100
+        volUp.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (currentVol < 100) {
+                currentVol = Math.min(100, currentVol + 5);
+                audio.volume = currentVol / 100;
+                volText.textContent = currentVol;
+                localStorage.setItem('music_vol', currentVol);
+            }
+        });
+
+        // ลดเสียงต่ำสุดถึง 0
+        volDown.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (currentVol > 0) {
+                currentVol = Math.max(0, currentVol - 5);
+                audio.volume = currentVol / 100;
+                volText.textContent = currentVol;
+                localStorage.setItem('music_vol', currentVol);
+            }
+        });
+
+        dockToggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            audioPanel.classList.toggle('hidden-panel');
+            dockToggleBtn.textContent = audioPanel.classList.contains('hidden-panel') ? 'SHOW' : 'AUDIO';
+        });
+
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const preloader = document.getElementById('preloader');
+                preloader.classList.add('preloader-hidden');
+                setTimeout(function() {
+                    preloader.style.display = 'none';
+                }, 600);
+            }, 800);
+        });
+    </script>
+</body>
+</html>
