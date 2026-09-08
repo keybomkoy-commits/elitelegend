@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ELITELEGEND9841 - Members</title>
+    <link rel="icon" href="icon.png" type="image/png">
+    
+    <style>
+        :root {
+            --bg-overlay: rgba(10, 10, 10, 0.85);
+            --transition-smooth: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            
+            --color-founder: #FFD700;
+            --color-leader: #FF3333;
+            --color-support: #3399FF;
+            --color-member: #33CC33;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            min-height: 100dvh; 
+            width: 100vw;
+            background: url('bg.png') no-repeat center center fixed;
+            background-size: cover;
+            background-color: var(--bg-overlay);
+            background-blend-mode: overlay;
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+            color: #fff;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.5); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
+
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #080808; 
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.6s ease;
+        }
+
+        .loader-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid transparent;
+            border-top: 3px solid rgba(255, 255, 255, 0.9);
+            border-right: 3px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            animation: spinRight 1s linear infinite;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+        }
+
+        @keyframes spinRight { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+
+        .preloader-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px 100px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        @keyframes slideUpFade {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            animation: slideUpFade 0.8s ease-out forwards;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            backdrop-filter: blur(5px);
+            transition: var(--transition-smooth);
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: #fff;
+            box-shadow: 0 0 15px rgba(255,255,255,0.3);
+            transform: translateX(-5px);
+        }
+
+        .search-box {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 20px 14px 45px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 15px;
+            backdrop-filter: blur(10px);
+            outline: none;
+            transition: var(--transition-smooth);
+        }
+
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .search-box input:focus {
+            border-color: #fff;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            fill: rgba(255,255,255,0.5);
+        }
+
+        .category-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            opacity: 0;
+            animation: slideUpFade 0.8s ease-out forwards;
+        }
+
+        .cat-founder { animation-delay: 0.2s; }
+        .cat-leader { animation-delay: 0.4s; }
+        .cat-support { animation-delay: 0.6s; }
+        .cat-member { animation-delay: 0.8s; }
+
+        .category-title {
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-transform: uppercase;
+        }
+
+        .category-title::after {
+            content: '';
+            flex-grow: 1;
+            height: 1px;
+            background: linear-gradient(to right, currentColor, transparent);
+            opacity: 0.4;
+        }
+
+        .title-founder { color: var(--color-founder); text-shadow: 0 0 10px rgba(255, 215, 0, 0.4); }
+        .title-leader { color: var(--color-leader); text-shadow: 0 0 10px rgba(255, 51, 51, 0.4); }
+        .title-support { color: var(--color-support); text-shadow: 0 0 10px rgba(51, 153, 255, 0.4); }
+        .title-member { color: var(--color-member); text-shadow: 0 0 10px rgba(51, 204, 51, 0.4); }
+
+        .member-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 15px;
+        }
+
+        .member-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 4px solid;
+            border-radius: 12px;
+            padding: 16px;
+            backdrop-filter: blur(8px);
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .member-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-3px);
+        }
+
+        .member-avatar {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            flex-shrink: 0;
+            background-color: #1a1a1a;
+        }
+
+        .member-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .member-name {
+            font-size: 15px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .member-role {
+            font-size: 11px;
+            opacity: 0.6;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .fb-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 6px;
+            padding: 4px 10px;
+            background: rgba(24, 119, 242, 0.15);
+            border: 1px solid rgba(24, 119, 242, 0.3);
+            border-radius: 6px;
+            color: #4A90E2;
+            text-decoration: none;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            width: fit-content;
+            transition: var(--transition-smooth);
+        }
+
+        .fb-btn svg {
+            width: 11px;
+            height: 11px;
+            fill: currentColor;
+        }
+
+        .fb-btn:hover {
+            background: #1877F2;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(24, 119, 242, 0.6);
+            border-color: #1877F2;
+        }
+
+        .card-founder { border-left-color: var(--color-founder); }
+        .card-leader { border-left-color: var(--color-leader); }
+        .card-support { border-left-color: var(--color-support); }
+        .card-member { border-left-color: var(--color-member); }
+
+        .no-result {
+            display: none;
+            text-align: center;
+            width: 100%;
+            padding: 40px;
+            color: rgba(255,255,255,0.5);
+            font-size: 16px;
+            letter-spacing: 2px;
+        }
+
+        /* --- ระบบเครื่องเล่นเพลงโทนดำ-ขาว มินิมอล พรีเมียม --- */
+        .audio-dock {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 9998;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideUpFade 1s ease-out 1.2s forwards;
+            opacity: 0;
+        }
+
+        .audio-border-glow {
+            position: relative;
+            border-radius: 30px;
+            padding: 1px;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .audio-panel {
+            background: rgba(12, 12, 12, 0.95);
+            border-radius: 28px;
+            padding: 8px 16px 8px 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .audio-panel.hidden-panel {
+            width: 48px;
+            padding: 8px;
+            overflow: hidden;
+        }
+
+        .cover-ring {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            flex-shrink: 0;
+            animation: spinCover 10s linear infinite;
+            animation-play-state: paused;
+        }
+
+        .audio-panel.is-playing .cover-ring {
+            animation-play-state: running;
+            border-color: #fff;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+        }
+
+        @keyframes spinCover {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .cover-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .audio-details {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            white-space: nowrap;
+        }
+
+        .song-link {
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            text-decoration: none;
+            letter-spacing: 0.8px;
+            max-width: 110px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: color 0.2s;
+        }
+
+        .song-link:hover {
+            color: #aaa;
+            text-decoration: underline;
+        }
+
+        .audio-btns {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .a-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 2px 7px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+        }
+
+        .a-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: #fff;
+            transform: translateY(-1px);
+        }
+
+        .vol-label {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.7);
+            min-width: 24px;
+            text-align: center;
+            font-family: monospace;
+            font-weight: bold;
+        }
+
+        .dock-btn {
+            background: rgba(12, 12, 12, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+            font-size: 9px;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+        }
+
+        .dock-btn:hover {
+            transform: scale(1.08);
+            border-color: #fff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 600px) {
+            .top-bar { flex-direction: column-reverse; align-items: stretch; }
+            .search-box { max-width: 100%; }
+            .back-btn { align-self: flex-start; }
+            .member-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="preloader">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <div class="container">
+        <div class="top-bar">
+            <a href="index.html" class="back-btn" id="backLink">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                BACK
+            </a>
+            
+            <div class="search-box">
+                <svg class="search-icon" viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+                <input type="text" id="searchInput" placeholder="Search member name...">
+            </div>
+        </div>
+
+        <div id="noResultMessage" class="no-result">Not found any member.</div>
+
+        <!-- FOUNDER -->
+        <div class="category-section cat-founder" data-category="founder">
+            <div class="category-title title-founder">FOUNDER</div>
+            <div class="member-grid">
+                <div class="member-card card-founder">
+                    <img src="etlg.png" alt="John Snow" class="member-avatar">
+                    <div class="member-info">
+                        <div class="member-name">Lyqen Elitelegend</div>
+                        <div class="member-role">Founder</div>
+                        <a href="https://www.facebook.com/profile.php?id=61593831339151" class="fb-btn" target="_blank">
+                            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            Facebook
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LEADER -->
+        <div class="category-section cat-leader" data-category="leader">
+            <div class="category-title title-leader">LEADER</div>
+            <div class="member-grid">
+                <div class="member-card card-leader">
+                    <img src="harper.png" alt="Robb Stark" class="member-avatar">
+                    <div class="member-info">
+                        <div class="member-name">Harper Winterfell Alpha</div>
+                        <div class="member-role">Leader</div>
+                        <a href="https://www.facebook.com/profile.php?id=61589123417065" class="fb-btn" target="_blank">
+                            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            Facebook
+                        </a>
+                    </div>
+                </div>
+                <div class="member-card card-leader">
+                    <img src="etlg.png" alt="Arya Stark" class="member-avatar">
+                    <div class="member-info">
+                        <div class="member-name">Dakyingvalis Leroy</div>
+                        <div class="member-role">Leader</div>
+                        <a href="https://www.facebook.com/profile.php?id=61586455178955" class="fb-btn" target="_blank">
+                            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            Facebook
+                        </a>                       
+                     </div>
+                </div>
+                <div class="member-card card-leader">
+                    <img src="enter.jpg" alt="Arya Stark" class="member-avatar">
+                    <div class="member-info">
+                        <div class="member-name">Enter Godyouknow</div>
+                        <div class="member-role">Leader</div>
+                        <a href="https://www.facebook.com/guyoverfriends" class="fb-btn" target="_blank">
+                            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            Facebook
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUPPORT & BY -->
+        <div class="category-section cat-support" data-category="support">
+            <div class="category-title title-support">SUPPORT & BY</div>
+            <div class="member-grid">
+                <div class="member-card card-support">
+                    <img src="unfair.png" alt="Samwell Tarly" class="member-avatar">
+                    <div class="member-info">
+                        <div class="member-name">424</div>
+                        <div class="member-role">Support & By</div>
+                        <a href="#" class="fb-btn" target="_blank">
+                            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            Facebook
+                        </a>
+                    </div>
+                </div>
+                <div class="member-card card-support">
+                    <img src="unfair.png" alt="Samwell Tarly" class="member-avatar">
+                    <div class="member-info">
+                        <div class="member-name">Maryjay Winterfell</div>
+                        <div class="member-role">Support & By</div>
+                        <a href="https://www.facebook.com/profile.php?id=61590676646687" class="fb-btn" target="_blank">
+                            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            Facebook
+                        </a>
+                    </div>
+                </div>
+                <div class="member-card card-support">
+                    <img src="unfair.png" alt="Samwell Tarly" class="member-avatar">
+                    <div class="member-info">
+                        <div class="member-name">Resta Winterfell</div>
+                        <div class="member-role">Support & By</div>
+                        <a href="https://www.facebook.com/resta.dennis" class="fb-btn" target="_blank">
+                            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            Facebook
+                        </a>
+                    </div>
+                </div>
+                <div class="member-card card-support">
+                    <img src="unfair.png" alt="Samwell Tarly" class="member-avatar">
+                    <div class="member-info">
+                        <div class="member-name">Hades Winterfell</div>
+                        <div class="member-role">Support & By</div>
+                        <a href="#" class="fb-btn" target="_blank">
+                            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            Facebook
+                        </a>
+                    </div>
+                </div>
+                <div class="member-card card-support">
+                    <img src="unfair.png" alt="Samwell Tarly" class="member-avatar">
+                    <div class="member-info">
+                        <div class="member-name">Mino Winterfell</div>
+                        <div class="member-role">Support & By</div>
+                        <a href="https://www.facebook.com/minosmp" class="fb-btn" target="_blank">
+                            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            Facebook
+                        </a>
+                    </div>
+                </div>
+                <div class="member-card card-support">
+                    <img src="unfair.png" alt="Samwell Tarly" class="member-avatar">
+                    <div class="member-info">
+                        <div class="member-name">Bangto Winterfell</div>
+                        <div class="member-role">Support & By</div>
+                        <a href="https://www.facebook.com/profile.php?id=61592412629422" class="fb-btn" target="_blank">
+                            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            Facebook
+                        </a>
+                    </div>
+                </div>
+                <div class="member-card card-support">
+                    <img src="unfair.png" alt="Samwell Tarly" class="member-avatar">
+                    <div class="member-info">
+                        <div class="member-name">Andrew Winterfell</div>
+                        <div class="member-role">Support & By</div>
+                        <a href="" class="fb-btn" target="_blank">
+                            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            Facebook
+                        </a>
+                    </div>
+                </div>
+                <div class="member-card card-support">
+                    <img src="sun.jpg" alt="Samwell Tarly" class="member-avatar">
+                    <div class="member-info">
+                        <div class="member-name">Sun Diamondonsnow</div>
+                        <div class="member-role">Support & By</div>
+                        <a href="https://www.facebook.com/sun.nerdishere" class="fb-btn" target="_blank">
+                            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            Facebook
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MEMBERS -->
+        <div class="category-section cat-member" data-category="member">
+            <div class="category-title title-member">MEMBERS</div>
+            <div class="member-grid">
+                <div class="member-card card-member">
+                    <img src="etlg.png" alt="Gendry B." class="member-avatar">
+                    <div class="member-info">
+                        <div class="member-name">Chin Sixtyeight</div>
+                        <div class="member-role">Member</div>
+                        <a href="https://www.facebook.com/profile.php?id=61593481587807" class="fb-btn" target="_blank">
+                            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            Facebook
+                        </a>
+                    </div>
+                </div>
+                <div class="member-card card-member">
+                    <img src="etlg.png" alt="Tormund G." class="member-avatar">
+                    <div class="member-info">
+                        <div class="member-name">Juji Tataros</div>
+                        <div class="member-role">Member</div>
+                        <a href="https://www.facebook.com/ZENRITAN827" class="fb-btn" target="_blank">
+                            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            Facebook
+                        </a>
+                    </div>
+                </div>
+                <div class="member-card card-member">
+                    <img src="etlg.png" alt="Lyanna M." class="member-avatar">
+                    <div class="member-info">
+                        <div class="member-name">Karopz Fourtwentyfourth</div>
+                        <div class="member-role">Member</div>
+                        <a href="https://www.facebook.com/profile.php?id=100028596913588" class="fb-btn" target="_blank">
+                            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            Facebook
+                        </a>
+                    </div>
+                </div>
+                <div class="member-card card-member">
+                    <img src="etlg.png" alt="Lyanna M." class="member-avatar">
+                    <div class="member-info">
+                        <div class="member-name">Meyou Birmingham</div>
+                        <div class="member-role">Member</div>
+                        <a href="https://www.facebook.com/profile.php?id=61593414430009" class="fb-btn" target="_blank">
+                            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            Facebook
+                        </a>
+                    </div>
+                </div>
+                <div class="member-card card-member">
+                    <img src="etlg.png" alt="Lyanna M." class="member-avatar">
+                    <div class="member-info">
+                        <div class="member-name">Moon Sabudbob</div>
+                        <div class="member-role">Member</div>
+                        <a href="https://www.facebook.com/profile.php?id=61593257406363" class="fb-btn" target="_blank">
+                            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            Facebook
+                        </a>
+                    </div>
+                </div>
+                <div class="member-card card-member">
+                    <img src="etlg.png" alt="Lyanna M." class="member-avatar">
+                    <div class="member-info">
+                        <div class="member-name">Noxgzane Sixeighteightstyle</div>
+                        <div class="member-role">Member</div>
+                        <a href="https://www.facebook.com/profile.php?id=61592472051143" class="fb-btn" target="_blank">
+                            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            Facebook
+                        </a>
+                    </div>
+                </div>
+                <div class="member-card card-member">
+                    <img src="etlg.png" alt="Lyanna M." class="member-avatar">
+                    <div class="member-info">
+                        <div class="member-name">Wojixolinjiayxn Levelmax</div>
+                        <div class="member-role">Member</div>
+                        <a href="https://www.facebook.com/profile.php?id=61593022963879" class="fb-btn" target="_blank">
+                            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            Facebook
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ระบบเสียงเว็บ -->
+    <audio id="bgMusic" src="music.mp3" loop></audio>
+
+    <div class="audio-dock">
+        <div class="audio-border-glow">
+            <div class="audio-panel" id="audioPanel">
+                <div class="cover-ring">
+                    <img src="cover.PNG" alt="Cover" class="cover-img">
+                </div>
+                <div class="audio-details">
+                    <a href="https://youtu.be/3R8-c4qRHGI?si=oP4NlnKDCiu_sIw9" target="_blank" class="song-link" title="ฟังเพลงต้นฉบับ">P9d - เฟี้ยวป่ะล่ะ</a>
+                    <div class="audio-btns">
+                        <button class="a-btn" id="playPauseBtn">PLAY</button>
+                        <button class="a-btn" id="volDown">-</button>
+                        <span class="vol-label" id="volText">30</span>
+                        <button class="a-btn" id="volUp">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="dock-btn" id="dockToggleBtn" title="ซ่อน/แสดง">AUDIO</button>
+    </div>
+
+    <script>
+        const audio = document.getElementById('bgMusic');
+        const audioPanel = document.getElementById('audioPanel');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const volDown = document.getElementById('volDown');
+        const volUp = document.getElementById('volUp');
+        const volText = document.getElementById('volText');
+        const dockToggleBtn = document.getElementById('dockToggleBtn');
+        const backLink = document.getElementById('backLink');
+
+        let currentVol = parseInt(localStorage.getItem('music_vol'));
+        if (isNaN(currentVol)) {
+            currentVol = 0;
+            audio.volume = 0;
+            let fadeIn = setInterval(() => {
+                if (currentVol < 30) {
+                    currentVol++;
+                    audio.volume = currentVol / 100;
+                    volText.textContent = currentVol;
+                    localStorage.setItem('music_vol', currentVol);
+                } else {
+                    clearInterval(fadeIn);
+                }
+            }, 100);
+        } else {
+            audio.volume = currentVol / 100;
+        }
+        volText.textContent = currentVol;
+
+        let hasInteracted = false;
+        function handleFirstInteraction() {
+            if (!hasInteracted) {
+                hasInteracted = true;
+                const isPlayingState = localStorage.getItem('music_playing') !== 'false';
+                if (isPlayingState && audio.paused) {
+                    audio.play().then(() => {
+                        playPauseBtn.textContent = 'PAUSE';
+                        audioPanel.classList.add('is-playing');
+                        localStorage.setItem('music_playing', 'true');
+                    }).catch(e => console.log(e));
+                }
+            }
+        }
+        window.addEventListener('click', handleFirstInteraction, { once: true });
+        window.addEventListener('keydown', handleFirstInteraction, { once: true });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTime = localStorage.getItem('music_time');
+            const isPlaying = localStorage.getItem('music_playing') !== 'false';
+
+            if (savedTime) {
+                audio.currentTime = parseFloat(savedTime);
+            }
+
+            if (isPlaying) {
+                audio.play().then(() => {
+                    playPauseBtn.textContent = 'PAUSE';
+                    audioPanel.classList.add('is-playing');
+                }).catch(() => {
+                    playPauseBtn.textContent = 'PLAY';
+                    audioPanel.classList.remove('is-playing');
+                });
+            } else {
+                audio.pause();
+                playPauseBtn.textContent = 'PLAY';
+                audioPanel.classList.remove('is-playing');
+            }
+        });
+
+        backLink.addEventListener('click', () => {
+            localStorage.setItem('music_time', audio.currentTime);
+            localStorage.setItem('music_playing', !audio.paused);
+            localStorage.setItem('music_vol', currentVol);
+        });
+
+        setInterval(() => {
+            if (!audio.paused) {
+                localStorage.setItem('music_time', audio.currentTime);
+            }
+        }, 500);
+
+        playPauseBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (audio.paused) {
+                audio.play();
+                playPauseBtn.textContent = 'PAUSE';
+                audioPanel.classList.add('is-playing');
+                localStorage.setItem('music_playing', 'true');
+            } else {
+                audio.pause();
+                playPauseBtn.textContent = 'PLAY';
+                audioPanel.classList.remove('is-playing');
+                localStorage.setItem('music_playing', 'false');
+            }
+        });
+
+        // เพิ่มเสียงสูงสุดถึง 100
+        volUp.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (currentVol < 100) {
+                currentVol = Math.min(100, currentVol + 5);
+                audio.volume = currentVol / 100;
+                volText.textContent = currentVol;
+                localStorage.setItem('music_vol', currentVol);
+            }
+        });
+
+        // ลดเสียงต่ำสุดถึง 0
+        volDown.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (currentVol > 0) {
+                currentVol = Math.max(0, currentVol - 5);
+                audio.volume = currentVol / 100;
+                volText.textContent = currentVol;
+                localStorage.setItem('music_vol', currentVol);
+            }
+        });
+
+        dockToggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            audioPanel.classList.toggle('hidden-panel');
+            dockToggleBtn.textContent = audioPanel.classList.contains('hidden-panel') ? 'SHOW' : 'AUDIO';
+        });
+
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const preloader = document.getElementById('preloader');
+                preloader.classList.add('preloader-hidden');
+                setTimeout(function() {
+                    preloader.style.display = 'none';
+                }, 600);
+            }, 800);
+        });
+
+        const searchInput = document.getElementById('searchInput');
+        const categorySections = document.querySelectorAll('.category-section');
+        const noResultMessage = document.getElementById('noResultMessage');
+
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            let totalVisibleSections = 0;
+
+            categorySections.forEach(section => {
+                const cards = section.querySelectorAll('.member-card');
+                let visibleCardsInSession = 0;
+
+                cards.forEach(card => {
+                    const name = card.querySelector('.member-name').textContent.toLowerCase();
+                    const role = card.querySelector('.member-role').textContent.toLowerCase();
+                    
+                    if (name.includes(searchTerm) || role.includes(searchTerm)) {
+                        card.style.display = 'flex';
+                        visibleCardsInSession++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                if (visibleCardsInSession > 0) {
+                    section.style.display = 'flex';
+                    totalVisibleSections++;
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+
+            if (totalVisibleSections === 0) {
+                noResultMessage.style.display = 'block';
+            } else {
+                noResultMessage.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
