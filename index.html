@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>𝐄𝐋𝐈𝐓𝐄𝐋𝐄𝐆𝐄𝐍𝐃</title>
+  <link id="site-favicon" rel="icon" href="">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    * { 
+      margin: 0; padding: 0; box-sizing: border-box; 
+      font-family: 'Kanit', sans-serif; 
+      -webkit-tap-highlight-color: transparent; 
+      -webkit-user-select: none; user-select: none;
+      outline: none !important;
+    }
+    
+    html, body { 
+      width: 100%; height: 100%; min-height: 100vh; 
+      overflow-x: hidden; overflow-y: auto; 
+      background-color: #030305; color: #ffffff; 
+      -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+    }
+    body { display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
+
+    @keyframes cinematicFadeIn {
+      0% { opacity: 0; transform: scale(0.96) translateY(20px); filter: blur(8px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+    }
+
+    @keyframes ambientGlow {
+      0%, 100% { opacity: 0.15; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(1.06); }
+    }
+
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    @keyframes smoothBorderBeam {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    #bg-layer {
+      position: fixed; inset: 0; width: 100%; height: 100%;
+      background-size: cover !important; background-position: center center !important; background-repeat: no-repeat !important; background-color: #030305;
+      z-index: 1; filter: brightness(0.6) contrast(1.15) saturate(1.05); transition: background-image 0.8s ease;
+    }
+
+    .ambient-light {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 60vw; height: 60vh; background: radial-gradient(circle, rgba(120, 110, 255, 0.04) 0%, rgba(0, 0, 0, 0) 70%);
+      z-index: 2; pointer-events: none; animation: ambientGlow 8s ease-in-out infinite;
+    }
+
+    .overlay { 
+      position: fixed; inset: 0; width: 100%; height: 100%; 
+      background: linear-gradient(180deg, rgba(3, 3, 5, 0.2) 0%, rgba(3, 3, 5, 0.55) 100%); 
+      z-index: 2; pointer-events: none; 
+    }
+    #particles-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+
+    .container { 
+      position: relative; z-index: 3; width: 100%; min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 40px 20px; text-align: center; 
+      animation: cinematicFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    
+    .main-wrapper { 
+      display: flex; flex-direction: column; align-items: center; justify-content: center; 
+      gap: clamp(22px, 3.2vh, 32px); width: 100%; max-width: 680px; 
+      margin: auto;
+    }
+
+    /* โลโก้ขนาดใหญ่ขึ้น พร้อมเส้นไฟวิ่งเฉพาะขอบนอกโดยไม่กระจายเข้าตรงกลาง */
+    .logo-box {
+      position: relative;
+      width: clamp(180px, 28vw, 240px); height: clamp(180px, 28vw, 240px);
+      border-radius: 42px;
+      display: none; justify-content: center; align-items: center;
+      animation: logoFloat 6s ease-in-out infinite;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .logo-box::before {
+      content: '';
+      position: absolute;
+      inset: -60%;
+      background: conic-gradient(from 0deg at 50% 50%, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 70%, rgba(255, 255, 255, 0.15) 85%, rgba(255, 255, 255, 0.95) 100%);
+      animation: smoothBorderBeam 3.5s linear infinite;
+      z-index: 1;
+    }
+
+    .logo-inner-content {
+      position: absolute;
+      inset: 2px;
+      background: rgba(12, 12, 18, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 40px;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 18px;
+    }
+
+    .logo-box:hover { transform: scale(1.05); }
+    .logo-img { max-width: 85%; max-height: 85%; object-fit: contain; border-radius: 24px; z-index: 3; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6)); }
+    .logo-icon { font-size: clamp(4.5rem, 9vw, 6.2rem); color: #ffffff; z-index: 3; filter: drop-shadow(0 0 20px rgba(255,255,255,0.4)); }
+
+    .header-text { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100%; }
+    
+    .title-large {
+      font-family: 'Bebas Neue', cursive; font-size: clamp(3.8rem, 9vw, 7.2rem); letter-spacing: clamp(4px, 2vw, 16px);
+      line-height: 0.85; text-transform: uppercase; font-weight: 800;
+      background: linear-gradient(170deg, #ffffff 20%, #707080 80%);
+      background-size: 200% auto; color: transparent; -webkit-background-clip: text; background-clip: text;
+      animation: textShimmer 7s linear infinite;
+      filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.8));
+    }
+
+    @keyframes textShimmer { 0% { background-position: 200% center; } 100% { background-position: -200% center; } }
+
+    .title-small { 
+      font-size: clamp(0.75rem, 1.1vw, 0.9rem); color: #b5b5c2; letter-spacing: clamp(6px, 1.8vw, 14px); 
+      text-transform: uppercase; font-weight: 600; opacity: 0.9;
+    }
+
+    .action-panel {
+      width: 100%; max-width: 540px; display: flex; flex-direction: column; gap: 14px;
+      background: rgba(15, 15, 22, 0.45); border: 1px solid rgba(255, 255, 255, 0.07);
+      padding: 22px; border-radius: 24px; backdrop-filter: blur(25px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .btn-main-primary {
+      width: 100%; padding: 16px 20px; font-size: clamp(0.95rem, 1.4vw, 1.1rem); font-weight: 700;
+      letter-spacing: 2px; color: #030305; text-decoration: none; background: #f2f2f8;
+      border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 14px; 
+      box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; align-items: center; gap: 2px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap; position: relative;
+    }
+    .btn-main-primary::after {
+      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+      transform: rotate(30deg) translateX(-100%); animation: btnGlowMove 4s infinite linear; pointer-events: none;
+    }
+    @keyframes btnGlowMove { 0% { transform: rotate(30deg) translateX(-100%); } 100% { transform: rotate(30deg) translateX(100%); } }
+
+    .btn-main-primary:hover { background: #ffffff; transform: translateY(-3px); box-shadow: 0 12px 35px rgba(255, 255, 255, 0.25); }
+    .btn-main-primary span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+    .btn-main-primary span.sub-text { font-size: clamp(0.55rem, 0.8vw, 0.65rem); color: #444450; font-weight: 700; letter-spacing: 1.5px; }
+
+    .partner-section { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    
+    .partner-label {
+      font-size: clamp(0.55rem, 0.8vw, 0.65rem); font-weight: 700; letter-spacing: 3px;
+      color: #8c8c9c; text-transform: uppercase; display: flex; align-items: center; gap: 8px; margin-bottom: 2px;
+    }
+    .partner-label::before, .partner-label::after {
+      content: ''; width: 20px; height: 1px; background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* จัดเรียงปุ่ม Partner เป็น 4 ปุ่มต่อแถว */
+    .partner-list-container {
+      width: 100%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+    }
+    
+    .btn-partner {
+      width: 100%; padding: 10px 8px; font-size: clamp(0.7rem, 0.95vw, 0.82rem); font-weight: 600;
+      letter-spacing: 0.5px; color: #ddddde; text-decoration: none; background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 10px; backdrop-filter: blur(10px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .btn-partner:hover { background: rgba(255, 255, 255, 0.1); color: #ffffff; transform: translateY(-2px); border-color: rgba(255, 255, 255, 0.3); box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
+    .btn-partner span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+    .btn-partner span.sub-text { font-size: clamp(0.42rem, 0.55vw, 0.52rem); color: #9999a6; font-weight: 500; letter-spacing: 0.5px; }
+
+    @media (max-width: 768px) {
+      .partner-list-container { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .contact-link {
+      display: inline-flex; align-items: center; gap: 8px; font-size: clamp(0.7rem, 0.95vw, 0.78rem); color: #b5b5c2;
+      text-decoration: none; background: rgba(255, 255, 255, 0.05); padding: 8px 18px; border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.12); backdrop-filter: blur(10px); font-weight: 500; transition: all 0.3s ease;
+    }
+    .contact-link:hover { color: #ffffff; background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.25); transform: translateY(-2px); }
+
+    .footer-wrapper { margin-top: 10px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .footer-text { font-size: clamp(0.55rem, 0.8vw, 0.65rem); font-weight: 600; letter-spacing: 3px; color: #666675; text-transform: uppercase; }
+
+    .audio-player-box {
+      position: fixed; bottom: 24px; right: 24px; z-index: 100; display: flex; align-items: center; gap: 14px;
+      padding: 8px 16px 8px 12px; background: rgba(12, 12, 18, 0.85); border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 50px; backdrop-filter: blur(30px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+      transition: transform 0.3s ease;
+    }
+    .audio-player-box:hover { border-color: rgba(255, 255, 255, 0.3); }
+    .player-disc {
+      width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #2a2a35, #0f0f14);
+      border: 1.5px solid rgba(255, 255, 255, 0.3); display: flex; align-items: center; justify-content: center;
+      animation: spinDisc 4s linear infinite; animation-play-state: paused;
+    }
+    .player-disc.playing { animation-play-state: running; }
+    .player-disc::after { content: ''; width: 8px; height: 8px; background: #fff; border-radius: 50%; box-shadow: 0 0 6px #fff; }
+    @keyframes spinDisc { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .player-info { display: flex; flex-direction: column; max-width: 130px; }
+    .player-title { font-size: 0.72rem; font-weight: 600; color: #eaeaf2; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .player-status-wrapper { display: flex; align-items: center; gap: 6px; margin-top: 1px; }
+    .status-dot { width: 5px; height: 5px; border-radius: 50%; background-color: #555; }
+    .status-dot.active { background-color: #00ffcc; box-shadow: 0 0 10px #00ffcc; }
+    .player-status { font-size: 0.52rem; color: #aaa; font-weight: 700; letter-spacing: 0.5px; }
+    .volume-box { display: flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, 0.08); padding: 5px 10px; border-radius: 20px; }
+    .volume-slider { -webkit-appearance: none; width: 40px; height: 3px; background: rgba(255, 255, 255, 0.2); border-radius: 2px; outline: none; cursor: pointer; }
+    .volume-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 9px; height: 9px; border-radius: 50%; background: #fff; cursor: pointer; box-shadow: 0 0 5px rgba(255,255,255,0.8); }
+    .player-toggle-btn { background: #f2f2f8; border: none; color: #030305; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(255,255,255,0.2); }
+    .player-toggle-btn:hover { transform: scale(1.1); background: #ffffff; }
+
+    @media (max-width: 480px) {
+      .audio-player-box { bottom: 15px; right: 15px; left: 15px; justify-content: space-between; width: auto; }
+      .player-info { max-width: 100px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="bg-layer"></div>
+  <div class="ambient-light"></div>
+  <div class="overlay"></div>
+  <canvas id="particles-canvas"></canvas>
+
+  <div class="container">
+    <div></div>
+
+    <div class="main-wrapper">
+      <div class="logo-box" id="logo-box">
+        <div class="logo-inner-content">
+          <img id="img-logo" src="" alt="Logo" class="logo-img" style="display: none;" crossorigin="anonymous">
+          <i id="icon-logo" class="" style="display: none;"></i>
+        </div>
+      </div>
+
+      <div class="header-text">
+        <h1 class="title-large" id="txt-large">...</h1>
+        <p class="title-small" id="txt-small">...</p>
+      </div>
+
+      <div class="action-panel">
+        <a href="member.html" class="btn-main-primary">
+          <span id="btn1-text">ELITELEGEND</span>
+          <span class="sub-text" id="btn1-sub">MEMBER ZONE</span>
+        </a>
+
+        <div class="partner-section">
+          <div class="partner-label">PARTNERS</div>
+          <div id="partner-list-container" class="partner-list-container"></div>
+        </div>
+      </div>
+
+      <a href="https://qaqenqcstudio.vercel.app/" target="_blank" class="contact-link">
+        <i class="fa-regular fa-comment-dots"></i> ติดต่อทำเว็บ
+      </a>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer-text">SYSTEM DESIGN BY QA QEN</div>
+    </div>
+  </div>
+
+  <audio id="bg-audio" loop preload="auto"><source id="audio-source" src="" type="audio/mpeg"></audio>
+
+  <div class="audio-player-box">
+    <div id="player-disc" class="player-disc"></div>
+    <div class="player-info">
+      <a id="player-music-link" href="#" target="_blank" class="player-title">กำลังโหลด...</a>
+      <div class="player-status-wrapper">
+        <span id="status-dot" class="status-dot"></span>
+        <span id="player-status-text" class="player-status">STOPPED</span>
+      </div>
+    </div>
+    <div class="volume-box">
+      <i class="fa-solid fa-volume-high" style="font-size:0.6rem; color:#aaa;"></i>
+      <input type="range" id="volume-slider" class="volume-slider" min="0" max="1" step="0.01" value="0.2">
+    </div>
+    <button id="player-btn" class="player-toggle-btn"><i id="player-icon" class="fa-solid fa-play"></i></button>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    const MUSIC_CONFIG = {
+      songTitle: "เพลงของเรา · Tattoo Colour",
+      originalUrl: "https://youtu.be/khHkwsnkt4g?si=07gcCI84Wx-mb12_",
+      musicFile: "music.mp3"
+    };
+
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class StormDustParticle {
+      constructor() { this.reset(true); }
+      reset(initial = false) {
+        this.x = initial ? Math.random() * canvas.width : -40;
+        this.y = initial ? Math.random() * canvas.height : Math.random() * canvas.height - 150;
+        this.radius = Math.random() * 1.6 + 0.4;
+        this.speedX = Math.random() * 2.8 + 1.2; 
+        this.speedY = Math.random() * 1.0 + 0.3; 
+        this.opacity = Math.random() * 0.45 + 0.1;
+      }
+      update() { 
+        this.x += this.speedX; 
+        this.y += this.speedY;
+        if (this.x > canvas.width + 40 || this.y > canvas.height + 40) this.reset(false); 
+      }
+      draw() {
+        ctx.beginPath(); 
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(215, 215, 240, ${this.opacity})`; 
+        ctx.fill();
+      }
+    }
+    for (let i = 0; i < 75; i++) particles.push(new StormDustParticle());
+    function animateParticles() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animateParticles); }
+    animateParticles();
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyATHcriedJRw-2WHNiAVnel77ZVcprcoFw",
+      authDomain: "elite-f10d3.firebaseapp.com",
+      projectId: "elite-f10d3",
+      storageBucket: "elite-f10d3.firebasestorage.app",
+      messagingSenderId: "335788686755",
+      appId: "1:335788686755:web:ea0623593c77dc23b0ae16"
+    };
+
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    db.collection("settings").doc("index_page").onSnapshot((doc) => {
+      if (doc.exists) {
+        const data = doc.data();
+        if (data.titleLarge) document.getElementById('txt-large').innerText = data.titleLarge;
+        if (data.titleSmall) document.getElementById('txt-small').innerText = data.titleSmall;
+        
+        if (data.bgUrl && data.bgUrl.trim() !== "") {
+          document.getElementById('bg-layer').style.backgroundImage = `url('${data.bgUrl.trim()}')`;
+        }
+        
+        if (data.siteIcon && data.siteIcon.trim() !== "") {
+          document.getElementById('site-favicon').href = data.siteIcon.trim();
+        }
+
+        const logoBox = document.getElementById('logo-box');
+        const imgLogo = document.getElementById('img-logo');
+        const iconLogo = document.getElementById('icon-logo');
+
+        if (data.logoUrl && data.logoUrl.trim() !== "") {
+          imgLogo.src = data.logoUrl.trim(); 
+          imgLogo.style.display = 'block'; 
+          iconLogo.style.display = 'none'; 
+          logoBox.style.display = 'flex';
+        } else if (data.logoIcon && data.logoIcon.trim() !== "") {
+          iconLogo.className = data.logoIcon.trim() + ' logo-icon'; 
+          iconLogo.style.display = 'block'; 
+          imgLogo.style.display = 'none'; 
+          logoBox.style.display = 'flex';
+        } else {
+          logoBox.style.display = 'none';
+        }
+
+        if (data.btn1_text) document.getElementById('btn1-text').innerText = data.btn1_text;
+        if (data.btn1_sub) document.getElementById('btn1-sub').innerText = data.btn1_sub;
+
+        const partnerContainer = document.getElementById('partner-list-container');
+        partnerContainer.innerHTML = "";
+
+        if (data.partners && Array.isArray(data.partners) && data.partners.length > 0) {
+          document.querySelector('.partner-section').style.display = 'flex';
+          data.partners.forEach(partner => {
+            const a = document.createElement('a');
+            a.href = partner.url || "#";
+            a.target = "_blank";
+            a.className = "btn-partner";
+            a.innerHTML = `
+              <span>${partner.text || "PARTNER NAME"}</span>
+              <span class="sub-text">${partner.sub || "PARTNER ZONE"}</span>
+            `;
+            partnerContainer.appendChild(a);
+          });
+        } else if (data.partner_text) {
+          document.querySelector('.partner-section').style.display = 'flex';
+          const a = document.createElement('a');
+          a.href = data.partner_url || "#";
+          a.target = "_blank";
+          a.className = "btn-partner";
+          a.innerHTML = `
+            <span>${data.partner_text}</span>
+            <span class="sub-text">${data.partner_sub || "PARTNER ZONE"}</span>
+          `;
+          partnerContainer.appendChild(a);
+        } else {
+          document.querySelector('.partner-section').style.display = 'none';
+        }
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const audio = document.getElementById("bg-audio");
+      const audioSource = document.getElementById("audio-source");
+      const playerTitle = document.getElementById("player-music-link");
+      const playerStatus = document.getElementById("player-status-text");
+      const statusDot = document.getElementById("status-dot");
+      const playerBtn = document.getElementById("player-btn");
+      const playerIcon = document.getElementById("player-icon");
+      const volumeSlider = document.getElementById("volume-slider");
+      const playerDisc = document.getElementById("player-disc");
+
+      audioSource.src = MUSIC_CONFIG.musicFile;
+      audio.load();
+      playerTitle.innerText = MUSIC_CONFIG.songTitle;
+      playerTitle.href = MUSIC_CONFIG.originalUrl;
+
+      audio.volume = 0.2;
+      volumeSlider.value = 0.2;
+
+      const savedTime = localStorage.getItem("music_time");
+      if (savedTime !== null) { audio.currentTime = parseFloat(savedTime); }
+      audio.addEventListener("timeupdate", () => { localStorage.setItem("music_time", audio.currentTime); });
+
+      function playMusic() {
+        audio.play().then(() => {
+          playerIcon.className = "fa-solid fa-pause";
+          playerStatus.innerText = "PLAYING";
+          statusDot.classList.add("active");
+          playerDisc.classList.add("playing");
+          sessionStorage.setItem("music_user_stopped", "false");
+        }).catch(() => {});
+      }
+
+      function pauseMusic() {
+        audio.pause();
+        playerIcon.className = "fa-solid fa-play";
+        playerStatus.innerText = "STOPPED";
+        statusDot.classList.remove("active");
+        playerDisc.classList.remove("playing");
+        sessionStorage.setItem("music_user_stopped", "true");
+      }
+
+      if (sessionStorage.getItem("music_user_stopped") !== "true") {
+        playMusic();
+        const startOnInteraction = (e) => {
+          if (e.target.closest('#player-btn') || e.target.closest('#volume-slider')) return;
+          if (audio.paused) playMusic();
+          document.removeEventListener("click", startOnInteraction);
+        };
+        document.addEventListener("click", startOnInteraction);
+      }
+
+      playerBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (audio.paused) playMusic(); else pauseMusic();
+      });
+
+      volumeSlider.addEventListener("input", (e) => { audio.volume = parseFloat(e.target.value); });
+    });
+  </script>
+</body>
+</html>

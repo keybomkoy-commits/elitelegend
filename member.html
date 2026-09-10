@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>𝐌𝐄𝐌𝐁𝐄𝐑𝐒 𝐄𝐋𝐈𝐓𝐄𝐋𝐄𝐆𝐄𝐍𝐃</title>
+  <link id="site-favicon" rel="icon" href="">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    html { background-color: #030305; visibility: visible; opacity: 1; }
+    * { 
+      margin: 0; padding: 0; box-sizing: border-box; 
+      font-family: 'Kanit', sans-serif; 
+      -webkit-tap-highlight-color: transparent; 
+      -webkit-user-select: none; user-select: none;
+      outline: none !important;
+    }
+    
+    html, body { 
+      width: 100%; height: 100%; overflow: hidden; 
+      background-color: #030305; color: #ffffff; 
+    }
+
+    #members-scroll-container {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    #members-scroll-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* พื้นหลังหน้าสมาชิก (ดึงข้อมูลจาก index_page ซิงค์ตรงกับหน้าหลัก) */
+    #members-bg-layer {
+      position: fixed; inset: 0; width: 100vw; height: 100vh;
+      background-size: cover !important; background-position: center center !important; background-repeat: no-repeat !important;
+      z-index: -1; filter: brightness(0.6) contrast(1.15) saturate(1.05); transition: background-image 0.8s ease;
+      background-color: #030305;
+    }
+
+    .overlay { 
+      position: fixed; inset: 0; width: 100%; height: 100%; 
+      background: linear-gradient(180deg, rgba(3, 3, 5, 0.2) 0%, rgba(3, 3, 5, 0.55) 100%); 
+      z-index: 2; pointer-events: none; 
+    }
+    #particles-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+
+    @keyframes guiSmoothEntrance {
+      0% { opacity: 0; transform: translateY(15px); filter: blur(5px); }
+      100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+
+    /* ปุ่มกลับหน้าหลัก (รูปบ้าน) */
+    .top-left-brand {
+      position: absolute; top: 25px; left: 30px; display: inline-flex; align-items: center; gap: 10px;
+      color: #e0d8c3; text-decoration: none; font-size: 0.85rem; font-weight: 500; letter-spacing: 1.5px;
+      padding: 8px 16px; background: rgba(15, 15, 22, 0.65); border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px; backdrop-filter: blur(12px); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); z-index: 10;
+    }
+    .top-left-brand:hover { color: #fff; background: rgba(255, 255, 255, 0.2); transform: translateY(-2px); border-color: rgba(255,255,255,0.3); }
+    .brand-logo-icon { width: 22px; height: 22px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; }
+
+    .view-members {
+      position: absolute; inset: 0; z-index: 3; width: 100vw; height: 100vh; padding: 30px 40px;
+      display: flex; flex-direction: column;
+      animation: guiSmoothEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      overflow: hidden;
+    }
+
+    .members-header-container {
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: space-between; text-align: left; 
+      margin-bottom: 30px; width: 100%; max-width: 1300px; margin-left: auto; margin-right: auto; gap: 20px;
+      padding: 0 10px;
+    }
+
+    @keyframes textShimmer {
+      0% { background-position: 200% center; }
+      100% { background-position: -200% center; }
+    }
+
+    .members-main-title {
+      font-family: 'Bebas Neue', cursive; font-size: clamp(2.2rem, 4vw, 3.2rem); letter-spacing: 3px; text-transform: uppercase;
+      background: linear-gradient(135deg, #ffffff 0%, #777785 40%, #ffffff 80%);
+      background-size: 200% auto; color: transparent; -webkit-background-clip: text; background-clip: text;
+      animation: textShimmer 6s linear infinite;
+      filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.5));
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .search-box-wrapper { width: 100%; max-width: 420px; position: relative; }
+    .search-input {
+      width: 100%; padding: 12px 18px 12px 48px; background: rgba(15, 15, 22, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 14px; color: #ffffff; font-size: 0.95rem; outline: none;
+      backdrop-filter: blur(15px); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      -webkit-user-select: text; user-select: text;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    }
+    .search-input:focus { border-color: rgba(255, 255, 255, 0.5); box-shadow: 0 0 25px rgba(255, 255, 255, 0.15); background: rgba(20, 20, 30, 0.9); }
+    .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #aaa; font-size: 0.95rem; }
+
+    #members-scroll-container {
+      flex-grow: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      max-width: 1300px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 10px 80px 10px;
+    }
+
+    .category-section { margin-bottom: 35px; display: none; }
+    .category-header { 
+      display: flex; align-items: center; justify-content: space-between; 
+      margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
+    }
+    .category-header-left { display: flex; align-items: center; gap: 10px; }
+    .category-title { font-family: 'Bebas Neue', cursive; font-size: 1.7rem; letter-spacing: 2px; color: #ffffff; }
+    
+    .member-count-badge {
+      font-size: 0.72rem; font-weight: 600; padding: 3px 12px; background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px; color: #bbb; letter-spacing: 1px;
+      backdrop-filter: blur(10px);
+    }
+
+    .member-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; justify-content: center; }
+    
+    .member-card {
+      background: rgba(15, 15, 22, 0.65); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px;
+      padding: 16px; display: flex; align-items: center; gap: 16px; 
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden;
+      backdrop-filter: blur(20px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+    .member-card::after {
+      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+      transform: rotate(30deg) translateX(-100%); transition: transform 0.6s ease; pointer-events: none;
+    }
+    .member-card:hover::after { transform: rotate(30deg) translateX(100%); }
+    .member-card:hover { 
+      transform: translateY(-5px) scale(1.02); 
+      border-color: rgba(255, 255, 255, 0.5); 
+      box-shadow: 0 15px 40px rgba(255, 255, 255, 0.15); 
+      background: rgba(22, 22, 32, 0.85); 
+    }
+
+    .member-card.boss { border-left: 4px solid #ffd700; background: linear-gradient(135deg, rgba(30, 28, 15, 0.75), rgba(15, 15, 22, 0.7)); }
+    .member-card.leader { border-left: 4px solid #ff4757; background: linear-gradient(135deg, rgba(30, 15, 18, 0.75), rgba(15, 15, 22, 0.7)); }
+    .member-card.support { border-left: 4px solid #1e90ff; background: linear-gradient(135deg, rgba(15, 22, 35, 0.75), rgba(15, 15, 22, 0.7)); }
+    .member-card.member { border-left: 4px solid #2ed573; background: linear-gradient(135deg, rgba(15, 30, 20, 0.75), rgba(15, 15, 22, 0.7)); }
+
+    .avatar-wrapper {
+      width: 58px; height: 58px; border-radius: 14px; flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15);
+      display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+    }
+    .member-card:hover .avatar-wrapper {
+      transform: scale(1.08) rotate(3deg);
+      box-shadow: 0 0 18px rgba(255, 255, 255, 0.35);
+      border-color: rgba(255, 255, 255, 0.7);
+    }
+    .avatar-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+    .member-card:hover .avatar-img { transform: scale(1.08); }
+    .avatar-icon { font-size: 1.6rem; color: #ffffff; }
+    .status-indicator { position: absolute; bottom: 3px; right: 3px; width: 8px; height: 8px; background-color: #2ed573; border: 1.5px solid #08080c; border-radius: 50%; box-shadow: 0 0 6px #2ed573; }
+
+    .member-info { 
+      display: flex; flex-direction: column; align-items: flex-start; justify-content: center; 
+      flex-grow: 1; overflow: hidden; gap: 4px; 
+    }
+    .rank-badge { font-size: 0.58rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; line-height: 1; }
+    .member-card.boss .rank-badge { color: #ffd700; }
+    .member-card.leader .rank-badge { color: #ff4757; }
+    .member-card.support .rank-badge { color: #1e90ff; }
+    .member-card.member .rank-badge { color: #2ed573; }
+
+    .member-name { 
+      font-size: 1.25rem; font-weight: 700; color: #ffffff; 
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; 
+      font-family: 'Bebas Neue', cursive; letter-spacing: 1.2px; line-height: 1; 
+    }
+    
+    .btn-facebook {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 4px 12px;
+      background: rgba(255, 255, 255, 0.08); color: #ffffff; text-decoration: none; font-size: 0.7rem; font-weight: 500; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.15); transition: all 0.3s ease;
+      margin-top: 2px;
+    }
+    .btn-facebook:hover { background: #fff; color: #030305; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,255,255,0.25); }
+    
+    .no-results { text-align: center; padding: 40px; color: #888; display: none; font-size: 0.95rem; letter-spacing: 1px; }
+
+    /* Audio Player */
+    .audio-player-box {
+      position: fixed; bottom: 24px; right: 24px; z-index: 100; display: flex; align-items: center; gap: 14px;
+      padding: 8px 16px 8px 12px; background: rgba(12, 12, 18, 0.85); border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 50px; backdrop-filter: blur(30px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+    }
+    .player-disc { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #2a2a35, #0f0f14); border: 1.5px solid rgba(255, 255, 255, 0.3); display: flex; align-items: center; justify-content: center; animation: spinDisc 4s linear infinite; animation-play-state: paused; }
+    .player-disc.playing { animation-play-state: running; }
+    .player-disc::after { content: ''; width: 8px; height: 8px; background: #fff; border-radius: 50%; box-shadow: 0 0 6px #fff; }
+    @keyframes spinDisc { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .player-info { display: flex; flex-direction: column; max-width: 130px; }
+    .player-title { font-size: 0.72rem; font-weight: 600; color: #eaeaf2; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .player-status-wrapper { display: flex; align-items: center; gap: 6px; margin-top: 1px; }
+    .status-dot { width: 5px; height: 5px; border-radius: 50%; background-color: #555; }
+    .status-dot.active { background-color: #00ffcc; box-shadow: 0 0 10px #00ffcc; }
+    .player-status { font-size: 0.52rem; color: #aaa; font-weight: 700; letter-spacing: 0.5px; }
+    .volume-box { display: flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, 0.08); padding: 5px 10px; border-radius: 20px; }
+    .volume-slider { -webkit-appearance: none; width: 40px; height: 3px; background: rgba(255, 255, 255, 0.2); border-radius: 2px; outline: none; cursor: pointer; }
+    .volume-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 9px; height: 9px; border-radius: 50%; background: #fff; cursor: pointer; box-shadow: 0 0 5px rgba(255,255,255,0.8); }
+    .player-toggle-btn { background: #f2f2f8; border: none; color: #030305; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(255,255,255,0.2); }
+    .player-toggle-btn:hover { transform: scale(1.1); background: #ffffff; }
+
+    @media (max-width: 900px) {
+      .top-left-brand { top: 20px; left: 20px; }
+      .view-members { padding: 75px 20px 20px 20px; }
+      .members-header-container { flex-direction: column; align-items: center; text-align: center; gap: 14px; }
+      .members-main-title { white-space: normal; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ภาพพื้นหลัง -->
+  <div id="members-bg-layer"></div>
+  <div class="overlay"></div>
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- ปุ่มกลับหน้าหลัก -->
+  <a href="index.html" class="top-left-brand">
+    <div class="brand-logo-icon"><i class="fa-solid fa-house"></i></div>
+    <span>หน้าหลัก</span>
+  </a>
+
+  <!-- หน้าแสดงรายชื่อสมาชิก -->
+  <div class="view-members" id="view-members">
+    <div class="members-header-container">
+      <h2 class="members-main-title">MEMBERS ELITELEGEND</h2>
+      <div class="search-box-wrapper">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="search-input" class="search-input" placeholder="ค้นหาชื่อสมาชิก..." onkeyup="filterMembers()">
+      </div>
+    </div>
+
+    <div id="members-scroll-container">
+      <div id="members-wrapper">
+        <div class="category-section boss" id="section-boss">
+          <div class="category-header">
+            <div class="category-header-left">
+              <i class="fa-solid fa-chess-king" style="color:#ffd700;"></i>
+              <h2 class="category-title" style="color:#ffd700;">THE BOSS</h2>
+            </div>
+            <span class="member-count-badge" id="count-boss">0 คน</span>
+          </div>
+          <div class="member-grid" id="grid-boss"></div>
+        </div>
+
+        <div class="category-section leader" id="section-leader">
+          <div class="category-header">
+            <div class="category-header-left">
+              <i class="fa-solid fa-chess-queen" style="color:#ff4757;"></i>
+              <h2 class="category-title" style="color:#ff4757;">LEADER</h2>
+            </div>
+            <span class="member-count-badge" id="count-leader">0 คน</span>
+          </div>
+          <div class="member-grid" id="grid-leader"></div>
+        </div>
+
+        <div class="category-section support" id="section-support">
+          <div class="category-header">
+            <div class="category-header-left">
+              <i class="fa-solid fa-chess-rook" style="color:#1e90ff;"></i>
+              <h2 class="category-title" style="color:#1e90ff;">SUPPORT</h2>
+            </div>
+            <span class="member-count-badge" id="count-support">0 คน</span>
+          </div>
+          <div class="member-grid" id="grid-support"></div>
+        </div>
+
+        <div class="category-section member" id="section-member">
+          <div class="category-header">
+            <div class="category-header-left">
+              <i class="fa-solid fa-chess-pawn" style="color:#2ed573;"></i>
+              <h2 class="category-title" style="color:#2ed573;">MEMBER</h2>
+            </div>
+            <span class="member-count-badge" id="count-member">0 คน</span>
+          </div>
+          <div class="member-grid" id="grid-member"></div>
+        </div>
+
+        <div id="no-results" class="no-results">ไม่พบรายชื่อสมาชิกที่ค้นหา</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- เครื่องเล่นเพลงประกอบ -->
+  <audio id="bg-audio" loop preload="auto"><source id="audio-source" src="" type="audio/mpeg"></audio>
+
+  <div class="audio-player-box">
+    <div id="player-disc" class="player-disc"></div>
+    <div class="player-info">
+      <a id="player-music-link" href="#" target="_blank" class="player-title">กำลังโหลด...</a>
+      <div class="player-status-wrapper">
+        <span id="status-dot" class="status-dot"></span>
+        <span id="player-status-text" class="player-status">STOPPED</span>
+      </div>
+    </div>
+    <div class="volume-box">
+      <i class="fa-solid fa-volume-high" style="font-size:0.6rem; color:#aaa;"></i>
+      <input type="range" id="volume-slider" class="volume-slider" min="0" max="1" step="0.01" value="0.2">
+    </div>
+    <button id="player-btn" class="player-toggle-btn"><i id="player-icon" class="fa-solid fa-play"></i></button>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    const MUSIC_CONFIG = {
+      songTitle: "เพลงของเรา · Tattoo Colour",
+      originalUrl: "https://youtu.be/khHkwsnkt4g?si=07gcCI84Wx-mb12_",
+      musicFile: "music.mp3"
+    };
+
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class StormDustParticle {
+      constructor() { this.reset(true); }
+      reset(initial = false) {
+        this.x = initial ? Math.random() * canvas.width : -40;
+        this.y = initial ? Math.random() * canvas.height : Math.random() * canvas.height - 150;
+        this.radius = Math.random() * 1.8 + 0.3;
+        this.speedX = Math.random() * 3.0 + 1.5; 
+        this.speedY = Math.random() * 1.1 + 0.3; 
+        this.opacity = Math.random() * 0.4 + 0.08;
+      }
+      update() { 
+        this.x += this.speedX; 
+        this.y += this.speedY;
+        if (this.x > canvas.width + 50 || this.y > canvas.height + 50) this.reset(false); 
+      }
+      draw() {
+        ctx.beginPath(); 
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(200, 200, 235, ${this.opacity})`; 
+        ctx.fill();
+      }
+    }
+    for (let i = 0; i < 65; i++) particles.push(new StormDustParticle());
+    function animateParticles() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animateParticles); }
+    animateParticles();
+
+    const mockupMembers = [];
+
+    function renderMembers(dataList) {
+      ['boss', 'leader', 'support', 'member'].forEach(role => {
+        document.getElementById(`grid-${role}`).innerHTML = '';
+      });
+
+      let counts = { boss: 0, leader: 0, support: 0, member: 0 };
+
+      dataList.forEach(m => {
+        const roleLower = (m.role || 'member').toLowerCase();
+        const gridElement = document.getElementById(`grid-${roleLower}`);
+        if (!gridElement) return;
+
+        counts[roleLower]++;
+
+        let avatarHtml = '';
+        if (m.avatar && m.avatar.trim() !== '') {
+          avatarHtml = `<img src="${m.avatar.trim()}" alt="${m.name || 'Member'}" class="avatar-img" loading="lazy" crossorigin="anonymous" onerror="this.onerror=null; this.outerHTML='<i class=\\'${m.iconClass || 'fa-solid fa-user'} avatar-icon\\'></i>';">`;
+        } else {
+          avatarHtml = `<i class="${m.iconClass || 'fa-solid fa-user'} avatar-icon"></i>`;
+        }
+
+        const cardHtml = `
+          <div class="member-card ${roleLower}" data-name="${(m.name || '').toLowerCase()}">
+            <div class="avatar-wrapper">
+              ${avatarHtml}
+              <div class="status-indicator"></div>
+            </div>
+            <div class="member-info">
+              <div class="rank-badge">${roleLower.toUpperCase()}</div>
+              <div class="member-name">${m.name}</div>
+              <a href="${m.facebook || '#'}" target="_blank" class="btn-facebook"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
+            </div>
+          </div>
+        `;
+        gridElement.insertAdjacentHTML('beforeend', cardHtml);
+      });
+
+      document.getElementById('count-boss').innerText = `${counts.boss} คน`;
+      document.getElementById('count-leader').innerText = `${counts.leader} คน`;
+      document.getElementById('count-support').innerText = `${counts.support} คน`;
+      document.getElementById('count-member').innerText = `${counts.member} คน`;
+
+      filterMembers();
+    }
+
+    function filterMembers() {
+      const keyword = document.getElementById('search-input').value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.member-card');
+      let totalVisible = 0;
+
+      cards.forEach(card => {
+        const name = card.getAttribute('data-name');
+        if (name.includes(keyword)) { card.style.display = 'flex'; totalVisible++; }
+        else { card.style.display = 'none'; }
+      });
+
+      ['boss', 'leader', 'support', 'member'].forEach(role => {
+        const section = document.getElementById(`section-${role}`);
+        const visibleCards = section.querySelectorAll(`.member-card[style*="display: flex"]`);
+        section.style.display = (visibleCards.length > 0) ? "block" : "none";
+      });
+
+      document.getElementById('no-results').style.display = (totalVisible === 0) ? 'block' : 'none';
+    }
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyATHcriedJRw-2WHNiAVnel77ZVcprcoFw",
+      authDomain: "elite-f10d3.firebaseapp.com",
+      projectId: "elite-f10d3",
+      storageBucket: "elite-f10d3.firebasestorage.app",
+      messagingSenderId: "335788686755",
+      appId: "1:335788686755:web:ea0623593c77dc23b0ae16"
+    };
+
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const collectionName = "member1_members";
+
+    // ดึงข้อมูลพื้นหลังและ Favicon จาก index_page ให้ตรงกันกับ index.html ทันที
+    db.collection("settings").doc("index_page").onSnapshot((doc) => {
+      if (doc.exists) {
+        const data = doc.data();
+        if (data.bgUrl && data.bgUrl.trim() !== "") {
+          document.getElementById('members-bg-layer').style.backgroundImage = `url('${data.bgUrl.trim()}')`;
+        }
+        if (data.siteIcon && data.siteIcon.trim() !== "") {
+          document.getElementById('site-favicon').href = data.siteIcon.trim();
+        }
+      }
+    });
+
+    db.collection(collectionName).onSnapshot((snapshot) => {
+      const liveMembers = [];
+      if (!snapshot.empty) {
+        snapshot.forEach(doc => liveMembers.push(doc.data()));
+        renderMembers(liveMembers);
+      } else {
+        renderMembers(mockupMembers);
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const audio = document.getElementById("bg-audio");
+      const audioSource = document.getElementById("audio-source");
+      const playerTitle = document.getElementById("player-music-link");
+      const playerStatus = document.getElementById("player-status-text");
+      const statusDot = document.getElementById("status-dot");
+      const playerBtn = document.getElementById("player-btn");
+      const playerIcon = document.getElementById("player-icon");
+      const volumeSlider = document.getElementById("volume-slider");
+      const playerDisc = document.getElementById("player-disc");
+
+      audioSource.src = MUSIC_CONFIG.musicFile;
+      audio.load();
+      playerTitle.innerText = MUSIC_CONFIG.songTitle;
+      playerTitle.href = MUSIC_CONFIG.originalUrl;
+
+      audio.volume = 0.2;
+      volumeSlider.value = 0.2;
+
+      const savedTime = localStorage.getItem("music_time");
+      if (savedTime !== null) { audio.currentTime = parseFloat(savedTime); }
+      audio.addEventListener("timeupdate", () => { localStorage.setItem("music_time", audio.currentTime); });
+
+      function playMusic() {
+        audio.play().then(() => {
+          playerIcon.className = "fa-solid fa-pause";
+          playerStatus.innerText = "PLAYING";
+          statusDot.classList.add("active");
+          playerDisc.classList.add("playing");
+          sessionStorage.setItem("music_user_stopped", "false");
+        }).catch(() => {});
+      }
+
+      function pauseMusic() {
+        audio.pause();
+        playerIcon.className = "fa-solid fa-play";
+        playerStatus.innerText = "STOPPED";
+        statusDot.classList.remove("active");
+        playerDisc.classList.remove("playing");
+        sessionStorage.setItem("music_user_stopped", "true");
+      }
+
+      if (sessionStorage.getItem("music_user_stopped") !== "true") {
+        playMusic();
+        const startOnInteraction = (e) => {
+          if (e.target.closest('#player-btn') || e.target.closest('#volume-slider')) return;
+          if (audio.paused) playMusic();
+          document.removeEventListener("click", startOnInteraction);
+        };
+        document.addEventListener("click", startOnInteraction);
+      }
+
+      playerBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (audio.paused) playMusic(); else pauseMusic();
+      });
+
+      volumeSlider.addEventListener("input", (e) => { audio.volume = parseFloat(e.target.value); });
+    });
+  </script>
+</body>
+</html>
