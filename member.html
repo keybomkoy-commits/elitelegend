@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MEMBERS // ELITE LEGEND</title>
+    <link rel="icon" id="siteFavicon" href="">
+    
+    <!-- ฟอนต์ชุดเดียวกับหน้า index: Cinzel, Chakra Petch, Prompt -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Cinzel:wght@700;800;900&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --red-primary: #e6001b;
+            --red-Bright: #ff2a43;
+            --bg-dark: #000000;
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        @keyframes pageReveal {
+            0% { opacity: 0; transform: translateY(12px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        body { 
+            margin: 0; padding: 0; min-height: 100vh; width: 100vw; 
+            font-family: 'Prompt', 'Chakra Petch', sans-serif; 
+            background-color: var(--bg-dark); 
+            color: #ffffff; 
+            overflow-x: hidden; 
+            display: flex; flex-direction: column; 
+            -webkit-font-smoothing: antialiased;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        a, button, input[type="range"], .music-header, .member-card {
+            cursor: pointer;
+        }
+
+        /* =========================================
+           BACKGROUND & OVERLAYS
+        ========================================= */
+        #bg-video {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            object-fit: cover; z-index: 0; pointer-events: none;
+            -webkit-user-drag: none;
+            filter: contrast(1.1) brightness(0.3);
+        }
+
+        #bg-image { 
+            display: none; /* ซ่อนไว้เพื่อไม่ให้รูปจากระบบทับ bg.gif */
+            position: fixed; inset: 0; 
+            background-size: cover; background-position: center; z-index: 0; 
+            filter: contrast(1.1) brightness(0.22);
+            pointer-events: none;
+        }
+        
+        .bg-overlay { 
+            position: fixed; inset: 0; 
+            background: radial-gradient(circle at 50% 20%, rgba(16, 0, 3, 0.65) 0%, rgba(0, 0, 0, 0.94) 75%, #000000 100%); 
+            z-index: 1; pointer-events: none; 
+        }
+        
+        #particleCanvas { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            z-index: 2; pointer-events: none; 
+        }
+        
+        /* =========================================
+           CONTAINER & TOP BAR
+        ========================================= */
+        .container { 
+            position: relative; z-index: 3; max-width: 980px; margin: 0 auto; 
+            padding: 40px 20px 130px; width: 100%; flex: 1; 
+            display: flex; flex-direction: column; align-items: center;
+            animation: pageReveal 0.9s var(--ease-out) forwards;
+        }
+        
+        .top-nav { 
+            display: flex; justify-content: space-between; align-items: center; 
+            width: 100%; margin-bottom: 28px; 
+        }
+        
+        .btn-back { 
+            text-decoration: none; color: #a0a0a0; 
+            font-family: 'Chakra Petch', sans-serif; font-weight: 600; 
+            font-size: 0.78rem; letter-spacing: 0.2em; text-transform: uppercase; 
+            padding: 9px 18px; 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-radius: 8px;
+            background: rgba(10, 10, 12, 0.75); 
+            backdrop-filter: blur(12px); 
+            transition: all 0.25s ease; 
+            display: flex; align-items: center; gap: 8px; 
+        }
+        .btn-back:hover { 
+            color: #ffffff; 
+            border-color: rgba(255, 255, 255, 0.25); 
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .member-counter { 
+            font-family: 'Chakra Petch', sans-serif; font-size: 0.78rem; color: #888888; 
+            letter-spacing: 0.2em; text-transform: uppercase; font-weight: 600; 
+            padding: 9px 4px;
+        }
+        
+        /* =========================================
+           HEADER TITLE
+        ========================================= */
+        .header-title-box { 
+            display: flex; flex-direction: column; align-items: center; 
+            text-align: center; margin-bottom: 36px; 
+        }
+        
+        @keyframes textShine {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .page-title { 
+            font-family: 'Cinzel', serif; 
+            font-size: clamp(2rem, 5vw, 3.6rem); 
+            letter-spacing: 0.14em; 
+            margin: 0; 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            background: linear-gradient(110deg, #ffffff 0%, #d8d8d8 28%, var(--red-primary) 50%, #7a000d 75%, #ffffff 100%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: textShine 6s linear infinite;
+        }
+
+        .title-divider {
+            width: clamp(100px, 22vw, 180px);
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--red-primary), transparent);
+            margin: 10px auto 0;
+        }
+
+        .page-subtitle { 
+            font-family: 'Chakra Petch', sans-serif; font-size: 0.7rem; color: #555555; 
+            letter-spacing: 0.4em; margin-top: 10px; text-transform: uppercase; font-weight: 600; 
+        }
+        
+        /* =========================================
+           SEARCH BAR & CATEGORY FILTER TABS
+        ========================================= */
+        .search-container { width: 100%; max-width: 480px; margin-bottom: 16px; }
+        .search-box { 
+            width: 100%; position: relative; display: flex; align-items: center;
+            background: rgba(12, 12, 14, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            backdrop-filter: blur(12px);
+            transition: border-color 0.25s ease, background 0.25s ease;
+        }
+        .search-box:focus-within {
+            border-color: rgba(255, 255, 255, 0.25);
+            background: rgba(16, 16, 18, 0.9);
+        }
+        .search-icon { 
+            position: absolute; left: 16px; width: 15px; height: 15px; 
+            fill: #555; pointer-events: none;
+        }
+        .search-box input { 
+            width: 100%; padding: 12px 95px 12px 44px; 
+            background: transparent; border: none; color: #fff; 
+            font-family: 'Prompt', sans-serif; font-size: 0.88rem; outline: none; 
+        }
+        .search-box input::placeholder { color: #4a4a4a; font-weight: 400; }
+        
+        .search-btn { 
+            position: absolute; right: 5px; 
+            background: transparent; color: #777; 
+            border: none;
+            padding: 8px 14px; border-radius: 6px;
+            font-family: 'Chakra Petch', sans-serif; font-size: 0.72rem; font-weight: 600; 
+            transition: color 0.2s ease; letter-spacing: 0.14em;
+        }
+        .search-btn:hover { color: #ffffff; }
+
+        /* ปุ่มกดเลือกหมวดหมู่แบบมินิมอล */
+        .category-filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 6px;
+            width: 100%;
+            margin-bottom: 52px;
+        }
+
+        .cat-filter-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            padding: 7px 14px;
+            color: #666666;
+            font-family: 'Chakra Petch', sans-serif;
+            font-size: 0.74rem;
+            font-weight: 600;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.25s ease;
+        }
+
+        .cat-filter-btn .filter-count {
+            font-size: 0.65rem;
+            color: #444;
+            transition: color 0.25s ease;
+        }
+
+        .cat-filter-btn:hover {
+            color: #cccccc;
+        }
+
+        .cat-filter-btn.active {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+        }
+
+        .cat-filter-btn.active .filter-count {
+            color: var(--red-Bright);
+        }
+        
+        /* =========================================
+           CATEGORY SECTIONS (โทนสีผู้ดี สุขุม ไม่ฉูดฉาดแบบ AI)
+        ========================================= */
+        .category-section { 
+            width: 100%; 
+            margin-bottom: 54px; 
+            display: none; 
+            --role-accent: #e6001b;
+            --role-rgb: 230, 0, 27;
+            --role-grad: rgba(110, 8, 20, 0.38);
+            --role-border: rgba(230, 0, 27, 0.28);
+        }
+        .category-section.has-data { 
+            display: flex; 
+            flex-direction: column;
+            align-items: center;
+            animation: pageReveal 0.5s var(--ease-out) forwards; 
+        }
+
+        /* คุมโทนสีให้กลืนกับความมืดอย่างหรูหรา */
+        .category-section[data-cat="FOUNDERS"] {
+            --role-accent: #ff2a43;
+            --role-rgb: 255, 42, 67;
+            --role-grad: rgba(135, 10, 24, 0.46);
+            --role-border: rgba(255, 42, 67, 0.38);
+        }
+        .category-section[data-cat="LEADERS"] {
+            --role-accent: #d4af37; /* ทองแชมเปญหม่น ดูแพง */
+            --role-rgb: 212, 175, 55;
+            --role-grad: rgba(95, 75, 18, 0.36);
+            --role-border: rgba(212, 175, 55, 0.3);
+        }
+        .category-section[data-cat="SUPPORT & BY"] {
+            --role-accent: #e11d48; /* แดงกุหลาบรมดำ */
+            --role-rgb: 225, 29, 72;
+            --role-grad: rgba(95, 14, 34, 0.36);
+            --role-border: rgba(225, 29, 72, 0.28);
+        }
+        .category-section[data-cat="MEMBERS"] {
+            --role-accent: #a1a1aa; /* เทาเงินออบซิเดียน เรียบเท่ */
+            --role-rgb: 220, 38, 38;
+            --role-grad: rgba(65, 10, 16, 0.28);
+            --role-border: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* หัวข้อหมวดหมู่เรียบคมเหมือนในรูปต้นแบบ */
+        .category-header { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 18px; 
+            width: 100%;
+            max-width: 420px;
+            margin-bottom: 22px; 
+        }
+        .category-line { 
+            flex: 1; 
+            height: 1px; 
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent); 
+        }
+        .category-title { 
+            font-family: 'Chakra Petch', sans-serif; 
+            font-size: 0.85rem; 
+            letter-spacing: 0.28em; 
+            margin: 0; 
+            text-transform: uppercase; 
+            font-weight: 700; 
+            color: var(--role-accent); 
+            white-space: nowrap;
+        }
+        
+        /* การจัดวาง Grid */
+        .member-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 14px; 
+            width: 100%; 
+        }
+
+        .category-section[data-cat="FOUNDERS"] .member-grid {
+            grid-template-columns: 1fr;
+            max-width: 680px;
+        }
+
+        @media (max-width: 740px) {
+            .member-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* =========================================
+           BESPOKE EDITORIAL CARD (นิ่ง เท่ มีมิติแสงธรรมชาติ)
+        ========================================= */
+        .member-card { 
+            position: relative;
+            border-radius: 12px; 
+            padding: 12px 22px 12px 14px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+            gap: 16px; 
+            /* ไล่เฉดสีจากซ้ายไปขวาเข้าหาสีดำสนิท */
+            background: linear-gradient(90deg, var(--role-grad) 0%, rgba(14, 14, 17, 0.88) 52%, rgba(8, 8, 10, 0.96) 100%);
+            border: 1px solid var(--role-border);
+            /* เส้นแสงสะท้อนบางเฉียบที่ขอบบนของการ์ดเหมือนกระจกจริง */
+            box-shadow: 
+                0 10px 30px -5px rgba(0, 0, 0, 0.85),
+                0 1px 0 0 rgba(255, 255, 255, 0.08) inset;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            transition: transform 0.35s var(--ease-out), border-color 0.35s ease, box-shadow 0.35s ease; 
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .category-section[data-cat="FOUNDERS"] .member-card {
+            padding: 14px 26px 14px 16px;
+        }
+
+        /* เอฟเฟกต์แสงไฟส่องตามเมาส์แบบนุ่มนวล (Subtle Spotlight) */
+        .member-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(
+                320px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
+                rgba(255, 255, 255, 0.06),
+                transparent 60%
+            );
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .member-card:hover::before {
+            opacity: 1;
+        }
+
+        /* แสงออร่าเบลอจางๆ จากรูปโปรไฟล์ด้านซ้าย */
+        .card-ambient-glow {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 90px;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            filter: blur(24px) saturate(1.4);
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: 0;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .member-card:hover .card-ambient-glow {
+            opacity: 0.38;
+            transform: scale(1.15);
+        }
+
+        .member-card:hover { 
+            transform: translateY(-3px); 
+            border-color: rgba(var(--role-rgb), 0.65);
+            box-shadow: 
+                0 16px 36px -6px rgba(0, 0, 0, 0.95),
+                0 0 22px -4px rgba(var(--role-rgb), 0.22),
+                0 1px 0 0 rgba(255, 255, 255, 0.16) inset;
+        }
+
+        .card-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            min-width: 0;
+            flex: 1;
+            position: relative;
+            z-index: 2;
+        }
+
+        .member-avatar { 
+            width: 56px; 
+            height: 56px; 
+            border-radius: 9px; 
+            background-color: #0b0b0b; 
+            object-fit: cover; 
+            flex-shrink: 0;
+            display: block;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7);
+            transition: transform 0.4s var(--ease-out);
+        }
+
+        .category-section[data-cat="FOUNDERS"] .member-avatar {
+            width: 62px;
+            height: 62px;
+            border-radius: 10px;
+        }
+
+        .member-card:hover .member-avatar { 
+            transform: scale(1.04);
+        }
+        
+        .member-name { 
+            font-size: 0.94rem; 
+            font-weight: 500; 
+            margin: 0; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            font-family: 'Prompt', sans-serif; 
+            color: #f2f2f2; 
+            letter-spacing: 0.02em; 
+            transition: color 0.25s ease, transform 0.3s var(--ease-out);
+        }
+
+        .category-section[data-cat="FOUNDERS"] .member-name {
+            font-size: 1.02rem;
+            font-weight: 600;
+        }
+
+        .member-card:hover .member-name {
+            color: #ffffff;
+            transform: translateX(2px);
+        }
+
+        /* ฝั่งขวาของการ์ด: ชื่อยศตัวเล็กคลีนๆ + ไอคอนลิงก์ที่ซ่อนตัวเนียนๆ */
+        .card-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            z-index: 2;
+            flex-shrink: 0;
+        }
+
+        .role-label-right { 
+            font-family: 'Chakra Petch', sans-serif; 
+            font-size: 0.62rem; 
+            font-weight: 700; 
+            letter-spacing: 0.16em; 
+            text-transform: uppercase; 
+            color: rgba(255, 255, 255, 0.55); 
+            transition: color 0.3s ease;
+        }
+
+        .member-card:hover .role-label-right {
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .quick-fb-icon {
+            color: rgba(255, 255, 255, 0.25);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            padding-left: 10px;
+            border-left: 1px solid rgba(255, 255, 255, 0.08);
+            transition: color 0.25s ease, transform 0.25s ease;
+        }
+
+        .member-card:hover .quick-fb-icon {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .quick-fb-icon:hover {
+            color: #ffffff !important;
+            transform: scale(1.1);
+        }
+
+        /* =========================================
+           CLEAN EDITORIAL MODAL (ป๊อปอัปโปรไฟล์แบบเรียบหรู ไม่ดู AI)
+        ========================================= */
+        .profile-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.82);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            z-index: 100000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.3s var(--ease-out), visibility 0.3s;
+        }
+
+        .profile-modal-backdrop.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .profile-modal-card {
+            position: relative;
+            width: 100%;
+            max-width: 360px;
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background: #09090b;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 
+                0 25px 60px rgba(0, 0, 0, 0.95),
+                0 1px 0 0 rgba(255, 255, 255, 0.1) inset;
+            transform: translateY(16px) scale(0.97);
+            transition: transform 0.35s var(--ease-out);
+            --modal-accent: #e6001b;
+        }
+
+        .profile-modal-backdrop.active .profile-modal-card {
+            transform: translateY(0) scale(1);
+        }
+
+        .profile-modal-card[data-role="FOUNDERS"] { --modal-accent: #ff2a43; }
+        .profile-modal-card[data-role="LEADERS"] { --modal-accent: #d4af37; }
+        .profile-modal-card[data-role="SUPPORT & BY"] { --modal-accent: #e11d48; }
+        .profile-modal-card[data-role="MEMBERS"] { --modal-accent: #a1a1aa; }
+
+        /* พื้นหลังเบลอจากรูปโปรไฟล์ด้านบน */
+        .modal-banner {
+            position: relative;
+            width: 100%;
+            height: 110px;
+            overflow: hidden;
+        }
+
+        .modal-banner-img {
+            position: absolute;
+            inset: -20px;
+            background-size: cover;
+            background-position: center;
+            filter: blur(20px) brightness(0.4) saturate(1.3);
+            transform: scale(1.1);
+        }
+
+        .modal-banner-fade {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(9,9,11,0.1) 0%, #09090b 100%);
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 30px;
+            height: 30px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #999;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 5;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+        }
+
+        .modal-avatar {
+            position: relative;
+            z-index: 3;
+            width: 108px;
+            height: 108px;
+            margin-top: -54px;
+            margin-bottom: 16px;
+            border-radius: 14px;
+            object-fit: cover;
+            background-color: #0d0d0d;
+            border: 3px solid #09090b;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.85);
+        }
+
+        .modal-content-inner {
+            width: 100%;
+            padding: 0 26px 26px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 3;
+        }
+
+        .modal-role-tag {
+            font-family: 'Chakra Petch', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--modal-accent);
+            margin-bottom: 6px;
+        }
+
+        .modal-fullname {
+            font-family: 'Prompt', sans-serif;
+            font-size: 1.28rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin: 0 0 22px 0;
+            line-height: 1.35;
+            word-break: break-word;
+        }
+
+        .modal-fb-button {
+            width: 100%;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 12px 18px;
+            color: #e0e0e0;
+            font-family: 'Chakra Petch', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.25s ease;
+        }
+
+        .modal-fb-button:hover {
+            background: #ffffff;
+            border-color: #ffffff;
+            color: #000000;
+        }
+
+        /* =========================================
+           NO RESULTS & PAGINATION
+        ========================================= */
+        .no-results { 
+            text-align: center; color: #555; padding: 45px; 
+            font-family: 'Chakra Petch', sans-serif; font-size: 0.9rem; 
+            display: none; text-transform: uppercase; letter-spacing: 0.2em;
+        }
+
+        .pagination-container { display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 32px; width: 100%; }
+        .page-btn { 
+            background: rgba(12, 12, 14, 0.85); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            color: #bbb; padding: 8px 18px; border-radius: 8px;
+            transition: all 0.25s ease; 
+            font-family: 'Chakra Petch', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.15em; 
+        }
+        .page-btn:hover:not(:disabled) { 
+            background: rgba(255, 255, 255, 0.08); color: #fff; border-color: rgba(255, 255, 255, 0.25);
+        }
+        .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .page-info { 
+            font-size: 0.75rem; color: #666; letter-spacing: 0.15em; 
+            font-family: 'Chakra Petch', sans-serif; font-weight: 600;
+        }
+
+        /* =========================================
+           MUSIC WIDGET
+        ========================================= */
+        .music-widget {
+            position: fixed; bottom: clamp(14px, 2.2vh, 22px); right: clamp(14px, 2.2vw, 22px); 
+            background: rgba(10, 10, 12, 0.88);
+            backdrop-filter: blur(16px); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 12px; 
+            width: clamp(240px, 55vw, 280px); 
+            z-index: 99999; 
+            overflow: hidden; display: flex; flex-direction: column; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.9);
+            transition: all 0.4s var(--ease-out);
+        }
+        .music-widget.collapsed { height: 58px; }
+        .music-widget.expanded { 
+            height: 110px; 
+            border-color: rgba(255, 255, 255, 0.22); 
+        }
+        .music-header { display: flex; align-items: center; padding: 10px 14px; height: 58px; }
+        .cover-wrapper { position: relative; width: 36px; height: 36px; margin-right: 12px; flex-shrink: 0; }
+        .music-cover {
+            width: 100%; height: 100%; border-radius: 8px; object-fit: cover;
+            border: 1px solid rgba(255, 255, 255, 0.15); 
+            -webkit-user-drag: none; transition: 0.3s;
+        }
+        .playing .music-cover { 
+            border-color: var(--red-primary); 
+        }
+
+        .music-info-mini { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .music-label { 
+            font-size: 0.5rem; color: var(--red-Bright); 
+            letter-spacing: 0.2em; font-weight: 700; 
+            font-family: 'Chakra Petch', sans-serif;
+        }
+        .music-title { 
+            font-family: 'Prompt', sans-serif; font-size: 0.78rem; font-weight: 500;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff; 
+        }
+        .music-link { 
+            font-size: 0.5rem; color: #666; text-decoration: none; 
+            font-family: 'Chakra Petch', sans-serif; letter-spacing: 0.1em; transition: 0.3s;
+        }
+        .music-link:hover { color: #ffffff; }
+        .toggle-icon { font-size: 0.55rem; color: #777; padding: 4px; transition: 0.4s ease; }
+        .music-controls { 
+            display: flex; align-items: center; padding: 8px 14px 12px 14px; gap: 12px; 
+            opacity: 0; transition: opacity 0.35s; 
+            border-top: 1px solid rgba(255, 255, 255, 0.06); 
+            background: rgba(0, 0, 0, 0.6); 
+        }
+        .music-widget.expanded .music-controls { opacity: 1; }
+        .ctrl-btn { 
+            background: rgba(255, 255, 255, 0.06); 
+            border: 1px solid rgba(255, 255, 255, 0.12); 
+            color: #ffffff; width: 28px; height: 28px; border-radius: 6px; 
+            font-size: 0.72rem; display: flex; justify-content: center; align-items: center;
+            transition: all 0.2s ease;
+        }
+        .ctrl-btn:hover { 
+            background: #ffffff; color: #000000; 
+        }
+        .vol-wrapper { 
+            flex: 1; display: flex; align-items: center; gap: 8px; 
+        }
+        .vol-slider { 
+            flex: 1; -webkit-appearance: none; height: 3px; 
+            background: rgba(255, 255, 255, 0.15); outline: none; border-radius: 2px;
+        }
+        .vol-slider::-webkit-slider-thumb { 
+            -webkit-appearance: none; width: 10px; height: 10px; 
+            border-radius: 50%;
+            background: #ffffff; 
+            cursor: pointer; transition: 0.2s; 
+        }
+        .vol-slider::-webkit-slider-thumb:hover { transform: scale(1.25); }
+
+        /* =========================================
+           FOOTER CREDIT
+        ========================================= */
+        .footer-credit { 
+            position: relative; z-index: 3; width: 100%; text-align: center; 
+            padding: 20px 0; font-size: 0.62rem; 
+            color: rgba(255, 255, 255, 0.3); letter-spacing: 0.22em; 
+            text-transform: uppercase; font-weight: 600; margin-top: auto; 
+            font-family: 'Chakra Petch', sans-serif;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+        }
+        .footer-credit span:first-child { color: var(--red-primary); }
+        .secret-admin-link { 
+            color: #666; text-decoration: none; transition: all 0.3s ease; 
+            font-family: 'Chakra Petch', sans-serif; font-weight: 600;
+        }
+        .secret-admin-link:hover { color: #ffffff; }
+    </style>
+</head>
+<body>
+    <!-- พื้นหลัง GIF -->
+    <img id="bg-video" src="bg.gif" alt="Background">
+    <div id="bg-image"></div>
+    <div class="bg-overlay" id="bgOverlay"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <div class="container">
+        <div class="top-nav">
+            <a href="index.html" class="btn-back"><span>‹</span> BACK</a>
+            <div id="totalMembersBadge" class="member-counter">0 MEMBERS</div>
+        </div>
+        <div class="header-title-box">
+            <h1 id="dynMemberTitle" class="page-title" data-text="ELITE LEGEND">ELITES IS KING</h1>
+            <div class="title-divider"></div>
+            <div id="dynMemberSubTitle" class="page-subtitle">MEMBERS ELITES</div>
+        </div>
+
+        <!-- ช่องค้นหา -->
+        <div class="search-container">
+            <div class="search-box">
+                <svg class="search-icon" viewBox="0 0 24 24"><path d="M21.71 20.29l-5.005-5.005C17.79 13.785 18.5 11.977 18.5 10c0-4.694-4.306-8.5-9.5-8.5S-0.5 5.306-0.5 10s4.306 8.5 9.5 8.5c1.977 0 3.785-.71 5.285-1.795l5.005 5.005c.39.39 1.024.39 1.414 0 .39-.39.39-1.024 0-1.414zM9 16c-3.314 0-6-2.686-6-6s2.686-6 6-6 6 2.686 6 6-2.686 6-6 6z"/></svg>
+                <input type="text" id="searchInput" placeholder="Search members..." autocomplete="off" spellcheck="false">
+                <button class="search-btn" id="searchBtn">SEARCH</button>
+            </div>
+        </div>
+
+        <!-- ปุ่มกดเลือกหมวดหมู่ -->
+        <div class="category-filter-bar" id="categoryFilterBar">
+            <button class="cat-filter-btn active" data-filter="ALL">
+                <span>ALL</span>
+                <span class="filter-count" id="filter-count-ALL">0</span>
+            </button>
+            <button class="cat-filter-btn" data-filter="FOUNDERS">
+                <span>FOUNDERS</span>
+                <span class="filter-count" id="filter-count-found">0</span>
+            </button>
+            <button class="cat-filter-btn" data-filter="LEADERS">
+                <span>LEADERS</span>
+                <span class="filter-count" id="filter-count-lead">0</span>
+            </button>
+            <button class="cat-filter-btn" data-filter="SUPPORT & BY">
+                <span>SUPPORT & BY</span>
+                <span class="filter-count" id="filter-count-supp">0</span>
+            </button>
+            <button class="cat-filter-btn" data-filter="MEMBERS">
+                <span>MEMBERS</span>
+                <span class="filter-count" id="filter-count-memb">0</span>
+            </button>
+        </div>
+
+        <div id="noResults" class="no-results">NO MEMBERS FOUND</div>
+        <div id="categoryContainer" style="width: 100%;"></div>
+    </div>
+
+    <!-- ================= ป๊อปอัปแสดงโปรไฟล์แบบเรียบหรู ================= -->
+    <div class="profile-modal-backdrop" id="profileModalBackdrop">
+        <div class="profile-modal-card" id="profileModalCard" data-role="MEMBERS">
+            <button class="modal-close-btn" id="closeModalBtn" title="Close">✕</button>
+            
+            <div class="modal-banner">
+                <div class="modal-banner-img" id="modalBannerImg"></div>
+                <div class="modal-banner-fade"></div>
+            </div>
+
+            <img src="" alt="Member Avatar" class="modal-avatar" id="modalAvatarImg">
+
+            <div class="modal-content-inner">
+                <div class="modal-role-tag" id="modalRoleBadge">MEMBER</div>
+                <h2 class="modal-fullname" id="modalFullName">Member Name</h2>
+                
+                <a href="#" target="_blank" class="modal-fb-button" id="modalFbLink">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                    <span>FACEBOOK</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- กล่องเพลง -->
+    <div id="musicWidget" class="music-widget collapsed">
+        <div class="music-header" id="toggleMusicBtn">
+            <div class="cover-wrapper">
+                <img id="musicCover" class="music-cover" src="https://placehold.co/100x100/0a0a0a/e6001b?text=🎵" alt="Cover">
+            </div>
+            <div class="music-info-mini">
+                <span class="music-label">AUDIO STREAM</span>
+                <div id="musicTitle" class="music-title">Unknown Track</div>
+                <a id="musicLink" class="music-link" href="#" target="_blank">SOURCE LINK</a>
+            </div>
+            <div id="toggleIcon" class="toggle-icon">▲</div>
+        </div>
+        <div class="music-controls">
+            <button id="playPauseBtn" class="ctrl-btn">▶</button>
+            <div class="vol-wrapper">
+                <span class="vol-icon" style="font-size:0.55rem; color:#888; font-family:'Chakra Petch',sans-serif; font-weight:700;">VOL</span>
+                <input type="range" id="volumeSlider" class="vol-slider" min="0" max="1" step="0.01" value="0.2">
+            </div>
+        </div>
+        <audio id="bgMusic" loop><source src="music.mp3" type="audio/mpeg"></audio>
+    </div>
+
+    <footer class="footer-credit">
+        <span>SYSTEM DESIGN BY QA QEN</span>
+        <span style="opacity: 0.3;">|</span>
+        <a href="admin.html" class="secret-admin-link">PANEL</a>
+    </footer>
+
+    <!-- ================= SCRIPT: ละอองลอยช้าๆ นิ่งๆ ในฉากหลัง ================= -->
+    <script>
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        
+        function resizeCanvas() { 
+            canvas.width = window.innerWidth; 
+            canvas.height = window.innerHeight; 
+            initParticles(); 
+        }
+        window.addEventListener('resize', resizeCanvas); 
+
+        class Particle {
+            constructor() {
+                this.reset();
+                this.y = Math.random() * canvas.height;
+            }
+            reset() {
+                this.x = Math.random() * canvas.width; 
+                this.y = canvas.height + Math.random() * 50;
+                this.size = Math.random() * 1.6 + 0.4; 
+                this.speedX = (Math.random() - 0.5) * 0.4; 
+                this.speedY = -(Math.random() * 0.6 + 0.15);
+                this.opacity = Math.random() * 0.28 + 0.05;
+            }
+            update() {
+                this.x += this.speedX; 
+                this.y += this.speedY;
+                if (this.y < -10 || this.x < -10 || this.x > canvas.width + 10) {
+                    this.reset();
+                }
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(230, 0, 27, ${this.opacity})`;
+                ctx.fill();
+            }
+        }
+        
+        function initParticles() {
+            particles = [];
+            const particleCount = Math.floor((window.innerWidth * window.innerHeight) / 18000);
+            for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+        }
+
+        resizeCanvas();
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+
+    <!-- ================= SCRIPT: FIREBASE, SPOTLIGHT & MODAL ================= -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBSZDi7Evvb_-HhlLRSLxDsu0BvcNe0Fec",
+            authDomain: "elites-d4cec.firebaseapp.com",
+            projectId: "elites-d4cec",
+            storageBucket: "elites-d4cec.firebasestorage.app",
+            messagingSenderId: "720876752268",
+            appId: "1:720876752268:web:5f42fb0005280c784fdaa9"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const categoriesConfig = [
+            { id: 'found', name: 'FOUNDERS', roleKey: 'FOUNDERS' },
+            { id: 'lead', name: 'LEADERS', roleKey: 'LEADERS' },
+            { id: 'supp', name: 'SUPPORT & BY', roleKey: 'SUPPORT & BY' },
+            { id: 'memb', name: 'MEMBERS', roleKey: 'MEMBERS' }
+        ];
+
+        let membersData = [];
+        let globalDefaultAvatar = 'https://placehold.co/150/111/fff?text=NO+IMG';
+        let activeCategoryFilter = 'ALL';
+
+        let currentMemberPage = 1;
+        const membersPerPage = 12;
+
+        const container = document.getElementById('categoryContainer');
+        const searchInput = document.getElementById('searchInput');
+        const noResults = document.getElementById('noResults');
+        const totalMembersBadge = document.getElementById('totalMembersBadge');
+        const filterButtons = document.querySelectorAll('.cat-filter-btn');
+
+        // Modal Elements
+        const profileModalBackdrop = document.getElementById('profileModalBackdrop');
+        const profileModalCard = document.getElementById('profileModalCard');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const modalBannerImg = document.getElementById('modalBannerImg');
+        const modalAvatarImg = document.getElementById('modalAvatarImg');
+        const modalRoleBadge = document.getElementById('modalRoleBadge');
+        const modalFullName = document.getElementById('modalFullName');
+        const modalFbLink = document.getElementById('modalFbLink');
+
+        function openMemberModal(member, avatarUrl) {
+            const roleUpper = (member.role || 'MEMBERS').toUpperCase();
+            profileModalCard.setAttribute('data-role', roleUpper);
+            modalBannerImg.style.backgroundImage = `url('${avatarUrl}')`;
+            modalAvatarImg.src = avatarUrl;
+            modalAvatarImg.alt = member.name;
+            modalRoleBadge.innerText = member.role || 'MEMBER';
+            modalFullName.innerText = member.name || 'Unknown';
+            
+            if (member.facebookUrl && member.facebookUrl.trim() !== "") {
+                modalFbLink.href = member.facebookUrl;
+            } else {
+                modalFbLink.href = '#';
+            }
+
+            profileModalBackdrop.classList.add('active');
+        }
+
+        function closeMemberModal() {
+            profileModalBackdrop.classList.remove('active');
+        }
+
+        closeModalBtn.addEventListener('click', closeMemberModal);
+        profileModalBackdrop.addEventListener('click', (e) => {
+            if (e.target === profileModalBackdrop) closeMemberModal();
+        });
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeMemberModal();
+        });
+
+        function initCategoryContainers() {
+            container.innerHTML = '';
+            categoriesConfig.forEach(cat => {
+                const section = document.createElement('div');
+                section.className = 'category-section';
+                section.id = `section-${cat.id}`;
+                section.setAttribute('data-cat', cat.roleKey);
+                section.innerHTML = `
+                    <div class="category-header">
+                        <div class="category-line"></div>
+                        <h2 class="category-title">${cat.name}</h2>
+                        <div class="category-line"></div>
+                    </div>
+                    <div class="member-grid" id="grid-${cat.id}"></div>
+                    <div id="pagination-${cat.id}" class="pagination-container" style="display: none;"></div>
+                `;
+                container.appendChild(section);
+            });
+        }
+
+        function renderMembers(dataToRender, searchTerm = "") {
+            categoriesConfig.forEach(cat => {
+                document.getElementById(`grid-${cat.id}`).innerHTML = '';
+                document.getElementById(`section-${cat.id}`).classList.remove('has-data');
+                document.getElementById(`pagination-${cat.id}`).style.display = 'none';
+            });
+
+            const searchFiltered = dataToRender.filter(m => m.name.toLowerCase().includes(searchTerm.toLowerCase()));
+            
+            document.getElementById('filter-count-ALL').innerText = searchFiltered.length;
+            categoriesConfig.forEach(cat => {
+                const countInCat = searchFiltered.filter(m => m.role.toUpperCase() === cat.roleKey.toUpperCase()).length;
+                const badgeEl = document.getElementById(`filter-count-${cat.id}`);
+                if (badgeEl) badgeEl.innerText = countInCat;
+            });
+
+            const finalFiltered = activeCategoryFilter === 'ALL'
+                ? searchFiltered
+                : searchFiltered.filter(m => m.role.toUpperCase() === activeCategoryFilter.toUpperCase());
+
+            noResults.style.display = finalFiltered.length === 0 ? 'block' : 'none';
+            totalMembersBadge.innerText = `${finalFiltered.length} MEMBERS`;
+
+            categoriesConfig.forEach(cat => {
+                if (activeCategoryFilter !== 'ALL' && cat.roleKey.toUpperCase() !== activeCategoryFilter.toUpperCase()) {
+                    return;
+                }
+
+                const groupList = finalFiltered.filter(m => m.role.toUpperCase() === cat.roleKey.toUpperCase());
+                if (groupList.length > 0) {
+                    const grid = document.getElementById(`grid-${cat.id}`);
+                    const section = document.getElementById(`section-${cat.id}`);
+                    const pagination = document.getElementById(`pagination-${cat.id}`);
+
+                    let listToRender = groupList;
+                    const isMembersCat = cat.roleKey.toUpperCase() === 'MEMBERS';
+
+                    if (isMembersCat) {
+                        const totalPages = Math.ceil(groupList.length / membersPerPage);
+                        if (currentMemberPage > totalPages && totalPages > 0) currentMemberPage = totalPages;
+                        
+                        listToRender = groupList.slice((currentMemberPage - 1) * membersPerPage, currentMemberPage * membersPerPage);
+                        
+                        if (totalPages > 1) {
+                            pagination.style.display = 'flex';
+                            pagination.innerHTML = `
+                                <button class="page-btn" id="prevPageBtn" ${currentMemberPage === 1 ? 'disabled' : ''}>PREV</button>
+                                <span class="page-info">PAGE ${currentMemberPage} / ${totalPages}</span>
+                                <button class="page-btn" id="nextPageBtn" ${currentMemberPage === totalPages ? 'disabled' : ''}>NEXT</button>
+                            `;
+
+                            document.getElementById('prevPageBtn').addEventListener('click', () => {
+                                if (currentMemberPage > 1) {
+                                    currentMemberPage--;
+                                    renderMembers(dataToRender, searchTerm);
+                                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                }
+                            });
+                            
+                            document.getElementById('nextPageBtn').addEventListener('click', () => {
+                                if (currentMemberPage < totalPages) {
+                                    currentMemberPage++;
+                                    renderMembers(dataToRender, searchTerm);
+                                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                }
+                            });
+                        }
+                    }
+
+                    listToRender.forEach(member => {
+                        const card = document.createElement('div');
+                        card.className = `member-card`;
+                        
+                        const avatarUrl = (member.avatar && member.avatar.trim() !== "") ? member.avatar : globalDefaultAvatar;
+                        
+                        card.innerHTML = `
+                            <div class="card-ambient-glow" style="background-image: url('${avatarUrl}')"></div>
+                            <div class="card-left">
+                                <img src="${avatarUrl}" class="member-avatar" alt="${member.name}">
+                                <h3 class="member-name" title="${member.name}">${member.name}</h3>
+                            </div>
+                            <div class="card-right">
+                                <span class="role-label-right">${member.role}</span>
+                                <a href="${member.facebookUrl || '#'}" target="_blank" class="quick-fb-icon" title="Facebook Profile">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                                </a>
+                            </div>
+                        `;
+
+                        card.addEventListener('mousemove', (e) => {
+                            const rect = card.getBoundingClientRect();
+                            card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                            card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+                        });
+
+                        card.addEventListener('click', (e) => {
+                            if (e.target.closest('.quick-fb-icon')) return;
+                            openMemberModal(member, avatarUrl);
+                        });
+
+                        grid.appendChild(card);
+                    });
+                    section.classList.add('has-data');
+                }
+            });
+        }
+
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeCategoryFilter = btn.getAttribute('data-filter');
+                currentMemberPage = 1;
+                renderMembers(membersData, searchInput.value);
+            });
+        });
+
+        initCategoryContainers();
+
+        const audio = document.getElementById('bgMusic');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const musicWidget = document.getElementById('musicWidget');
+        const toggleMusicBtn = document.getElementById('toggleMusicBtn');
+        const toggleIcon = document.getElementById('toggleIcon');
+        
+        let isPlaying = false; 
+        audio.volume = 0.2;
+        volumeSlider.value = 0.2;
+
+        const savedTime = sessionStorage.getItem('musicCurrentTime');
+        const userStopped = sessionStorage.getItem('userStoppedMusic');
+        if (savedTime) audio.currentTime = parseFloat(savedTime);
+
+        if (userStopped !== 'true' && sessionStorage.getItem('musicIsPlaying') === 'true') {
+            audio.play().then(() => { playPauseBtn.innerHTML = '❚❚'; musicWidget.classList.add('playing'); isPlaying = true; }).catch(e=>{});
+        }
+
+        window.addEventListener('beforeunload', () => {
+            sessionStorage.setItem('musicCurrentTime', audio.currentTime);
+            sessionStorage.setItem('musicIsPlaying', isPlaying);
+        });
+
+        document.body.addEventListener('click', (e) => {
+            if (sessionStorage.getItem('userStoppedMusic') === 'true') return;
+            if (!isPlaying && !e.target.closest('#playPauseBtn') && !e.target.closest('.vol-slider') && !e.target.closest('.music-widget')) {
+                audio.play().then(() => { 
+                    playPauseBtn.innerHTML = '❚❚'; 
+                    musicWidget.classList.add('playing'); 
+                    isPlaying = true; 
+                    sessionStorage.setItem('musicIsPlaying', 'true'); 
+                    sessionStorage.setItem('userStoppedMusic', 'false');
+                }).catch(e=>{});
+            }
+        });
+
+        playPauseBtn.addEventListener('click', () => {
+            if (isPlaying) { 
+                audio.pause(); 
+                playPauseBtn.innerHTML = '▶'; 
+                musicWidget.classList.remove('playing'); 
+                sessionStorage.setItem('musicIsPlaying', 'false');
+                sessionStorage.setItem('userStoppedMusic', 'true'); 
+            } else { 
+                audio.play().then(() => { 
+                    playPauseBtn.innerHTML = '❚❚'; 
+                    musicWidget.classList.add('playing'); 
+                    sessionStorage.setItem('musicIsPlaying', 'true');
+                    sessionStorage.setItem('userStoppedMusic', 'false');
+                }).catch(e=>{}); 
+            }
+            isPlaying = !isPlaying;
+        });
+
+        volumeSlider.addEventListener('input', (e) => { audio.volume = e.target.value; });
+        toggleMusicBtn.addEventListener('click', (e) => {
+            if (e.target.tagName.toLowerCase() === 'a') return;
+            musicWidget.classList.toggle('collapsed');
+            musicWidget.classList.toggle('expanded');
+            toggleIcon.style.transform = musicWidget.classList.contains('expanded') ? 'rotate(180deg)' : 'rotate(0deg)';
+        });
+
+        onSnapshot(doc(db, "settings", "homepage"), (docSnap) => {
+            if (docSnap.exists()) {
+                const config = docSnap.data();
+                if (config.faviconUrl) document.getElementById('siteFavicon').href = config.faviconUrl;
+                
+                if (config.mainTitle) {
+                    const mTitle = document.getElementById('dynMemberTitle');
+                    mTitle.innerText = config.mainTitle;
+                    mTitle.setAttribute('data-text', config.mainTitle);
+                }
+                
+                if (config.subTitle) document.getElementById('dynMemberSubTitle').innerText = config.subTitle;
+                if (config.defaultAvatar) globalDefaultAvatar = config.defaultAvatar;
+                if (config.musicTitle) document.getElementById('musicTitle').innerText = config.musicTitle;
+                if (config.musicLinkText) document.getElementById('musicLink').innerText = config.musicLinkText;
+                if (config.musicLinkUrl) document.getElementById('musicLink').href = config.musicLinkUrl;
+                if (config.musicCoverUrl) document.getElementById('musicCover').src = config.musicCoverUrl;
+            }
+        });
+
+        onSnapshot(collection(db, "members"), (snapshot) => {
+            let firebaseMembers = [];
+            snapshot.forEach(doc => { firebaseMembers.push({ id: doc.id, ...doc.data() }); });
+            
+            firebaseMembers.sort((a, b) => (a.order || 999) - (b.order || 999));
+
+            membersData = firebaseMembers;
+            renderMembers(membersData, searchInput.value);
+        });
+
+        searchInput.addEventListener('input', (e) => { 
+            currentMemberPage = 1; 
+            renderMembers(membersData, e.target.value); 
+        });
+        document.getElementById('searchBtn').addEventListener('click', () => { 
+            currentMemberPage = 1; 
+            renderMembers(membersData, searchInput.value); 
+        });
+    </script>
+</body>
+</html>
